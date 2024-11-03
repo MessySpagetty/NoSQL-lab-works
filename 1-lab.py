@@ -1,6 +1,7 @@
 import redis
 import tkinter.ttk as ttk
 import tkinter as tk
+from tkinter import font
 import json
 
 # Создание основного окна и установка его заголовка    
@@ -12,8 +13,8 @@ SCR_HEIGHT = root.winfo_screenheight()
 root.geometry(f"{SCR_WIDTH}x{SCR_HEIGHT}")
 
 # Create a label
-label = tk.Label(root, text="Текущий пользователь:")
-label.pack(pady=10)
+current_user_lbl = tk.Label(root, text="Текущий пользователь:")
+current_user_lbl.pack(pady=10)
 
 with open('user_settings.json', 'r') as file:
     user_settings = json.load(file)
@@ -21,6 +22,15 @@ with open('user_settings.json', 'r') as file:
 choose_user_combo = ttk.Combobox(root, values=list(user_settings.keys()))
 choose_user_combo.current(0)
 choose_user_combo.pack()
+
+settings_title_lbl = tk.Label(root, text="Задайте настройки для текущего пользователя:")
+settings_title_lbl.pack()
+
+settings_font_lbl = tk.Label(root, text="Шрифт:")
+settings_title_lbl.pack()
+
+settings_font_combo = ttk.Combobox(root, values=list(font.families()))
+settings_font_combo.pack()
 
 # Передача управления пользователю
 root.mainloop()
