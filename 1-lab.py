@@ -2,6 +2,7 @@ import redis
 import tkinter.ttk as ttk
 import tkinter as tk
 from tkinter import font
+from tkinter import colorchooser
 import json
 
 # Создание основного окна и установка его заголовка    
@@ -36,6 +37,10 @@ settings_font_size_lbl.pack()
 settings_font_size_entr = tk.Entry(root)
 settings_font_size_entr.pack()
 
+# Выбор цвета текста
+settings_font_color_clrchooser = tk.Button(root, text="Выбрать цвет", command=colorchooser.askcolor)
+settings_font_color_clrchooser.pack()
+
 # Настройки начертания текста
 settings_font_style_lbl = tk.Label(root, text="Начертание:")
 settings_font_style_lbl.pack()
@@ -50,6 +55,13 @@ settings_font_underline_checkbox = tk.Checkbutton(root, text="Underline", variab
 settings_font_bold_checkbox.pack()
 settings_font_italic_checkbox.pack()
 settings_font_underline_checkbox.pack()
+
+# Надпись
+origin_lbl = tk.Label(root, text="Исходная надпись:")
+origin_lbl.pack()
+origin_entr = tk.Entry(root)
+origin_entr.pack()
+
 
 
 
