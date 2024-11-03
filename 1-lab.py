@@ -20,9 +20,19 @@ current_user_lbl.pack(pady=10)
 with open('user_settings.json', 'r') as file:
     user_settings = json.load(file)
 
+current_user = tk.StringVar()
+font_name = tk.StringVar()
+font_size = tk.StringVar()
+font_color = tuple
+style_bold = tk.BooleanVar()
+style_italic = tk.BooleanVar()
+style_underline = tk.BooleanVar()
+
+
 choose_user_combo = ttk.Combobox(root, values=list(user_settings.keys()))
 choose_user_combo.current(0)
 choose_user_combo.pack()
+
 
 settings_title_lbl = tk.Label(root, text="Задайте настройки для текущего пользователя:")
 settings_title_lbl.pack()
@@ -45,30 +55,24 @@ settings_font_color_clrchooser.pack()
 settings_font_style_lbl = tk.Label(root, text="Начертание:")
 settings_font_style_lbl.pack()
 
-bold_var = tk.BooleanVar()
-settings_font_bold_checkbox = tk.Checkbutton(root, text="Bold", variable=bold_var)
-italic_var = tk.BooleanVar()
-settings_font_italic_checkbox = tk.Checkbutton(root, text="Italic", variable=italic_var)
-underline_var = tk.BooleanVar()
-settings_font_underline_checkbox = tk.Checkbutton(root, text="Underline", variable=underline_var)
+settings_font_bold_checkbox = tk.Checkbutton(root, text="Bold", variable=style_bold)
+settings_font_italic_checkbox = tk.Checkbutton(root, text="Italic", variable=style_italic)
+settings_font_underline_checkbox = tk.Checkbutton(root, text="Underline", variable=style_underline)
 
 settings_font_bold_checkbox.pack()
 settings_font_italic_checkbox.pack()
 settings_font_underline_checkbox.pack()
 
 # Надпись
-origin_lbl = tk.Label(root, text="Исходная надпись:")
-origin_lbl.pack()
-origin_entr = tk.Entry(root)
-origin_entr.pack()
+origin_txt_lbl = tk.Label(root, text="Исходная надпись:")
+origin_txt_lbl.pack()
+origin_txt_entr = tk.Entry(root)
+origin_txt_entr.pack()
 
-
-
-
-
-
-
-
+rendered_txt_lbl = tk.Label(root, text="Надпись с текущими настройками:")
+rendered_txt_lbl.pack()
+rendered_txt = tk.Label(root, text="Здесь надпись должна динамически меняться", bg="white")
+rendered_txt.pack()
 
 # Передача управления пользователю
 root.mainloop()
