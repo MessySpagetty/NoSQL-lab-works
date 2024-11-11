@@ -1,5 +1,23 @@
 {
-    "Questionable": null,
-    "Gahjealously": null,
-    "Predetermine": null
+    "Questionable": {
+        "font_name": "", 
+        "font_size": "",
+        "font_color": "",
+        "font_style": "",
+        "font_example": ""
+    },
+    "Gahjealously": {
+        "font_name": "", 
+        "font_size": "",
+        "font_color": "",
+        "font_style": "",
+        "font_example": ""
+    },
+    "Predetermine": {
+        "font_name": "", 
+        "font_size": "",
+        "font_color": "",
+        "font_style": "",
+        "font_example": ""
+    }
 }
