@@ -5,16 +5,18 @@ from tkinter import font
 from tkinter import colorchooser
 import json
 
-global font_color
+
+def get_hex(rgb):
+    return "#%02x%02x%02x" % rgb  
 
 def ask_color_handler():
     global font_color
     # получение цвета, выбранного пользователем в RGB формате 
-    font_color = colorchooser.askcolor()[1]
+    font_color = get_hex(colorchooser.askcolor()[0])
+    update_font()
 
-def update_font():
-    default_font = font.nametofont("TkDefaultFont")
-    local_font_name = font_name if font_name != "" else default_font.name
+def update_font(*args):
+    local_font_name = font_name.get()
 
     font_size_cur = font_size.get()
     local_font_size = int(font_size_cur) if font_size_cur != "" else 12
@@ -49,15 +51,18 @@ with open('user_settings.json', 'r') as file:
 
 current_user = tk.StringVar()
 font_name = tk.StringVar()
+font_name.trace_add("write", update_font)
 font_size = tk.StringVar()
-font_color = tuple
+font_size.trace_add("write", update_font)
+global font_color
+font_color = "black"
 style_bold = tk.BooleanVar()
 style_italic = tk.BooleanVar()
 style_underline = tk.BooleanVar()
 txt_entr = tk.StringVar()
 
 
-choose_user_combo = ttk.Combobox(root, values=list(user_settings.keys()), textvariable=current_user)
+choose_user_combo = ttk.Combobox(root, values=list(user_settings.keys()), textvariable=current_user, state="readonly")
 choose_user_combo.current(0)
 choose_user_combo.pack()
 
@@ -67,7 +72,8 @@ settings_title_lbl.pack()
 
 settings_font_name_lbl = tk.Label(root, text="Шрифт:")
 settings_font_name_lbl.pack()
-settings_font_name_combo = ttk.Combobox(root, values=list(font.families()), textvariable=font_name)
+settings_font_name_combo = ttk.Combobox(root, values=list(font.families()), textvariable=font_name, state="readonly")
+settings_font_name_combo.current(0)
 settings_font_name_combo.pack()
 
 settings_font_size_lbl = tk.Label(root, text="Размер шрифта:")
@@ -94,7 +100,7 @@ settings_font_underline_checkbox.pack()
 
 # Надпись
 origin_txt_lbl = tk.Label(root, text="Исходная надпись:")
-origin_txt_lbl.pack()
+origin_txt_lbl.pack() 
 origin_txt_entr = tk.Entry(root, textvariable=txt_entr)
 origin_txt_entr.pack()
 
