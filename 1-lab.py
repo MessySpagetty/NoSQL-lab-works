@@ -5,16 +5,31 @@ from tkinter import font
 from tkinter import colorchooser
 import json
 
-def ask_color_handler(event):
+global font_color
+
+def ask_color_handler():
+    global font_color
     # получение цвета, выбранного пользователем в RGB формате 
-    font_color = colorchooser.askcolor()[0]
+    font_color = colorchooser.askcolor()[1]
 
 def update_font():
     default_font = font.nametofont("TkDefaultFont")
     local_font_name = font_name if font_name != "" else default_font.name
-    local_font_size = int(font_size.get()) if font_size.get() != "" else 12
-    custom_font = font.Font(family=local_font_name, size=local_font_size, weight="bold", slant="italic")
-    return custom_font
+
+    font_size_cur = font_size.get()
+    local_font_size = int(font_size_cur) if font_size_cur != "" else 12
+
+    settings = ""
+    local_weight = "bold " if style_bold.get() else "normal "
+    settings += local_weight
+
+    local_slant = "italic " if style_italic.get() else "roman "
+    settings += local_slant
+    
+    local_underline = "underline" if style_underline.get() else ""
+    settings += local_underline
+
+    rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color)
 
 
 # Создание основного окна и установка его заголовка    
@@ -68,13 +83,13 @@ settings_font_color_clrchooser.pack()
 settings_font_style_lbl = tk.Label(root, text="Начертание:")
 settings_font_style_lbl.pack()
 
-settings_font_bold_checkbox = tk.Checkbutton(root, text="Жирное", variable=style_bold)
+settings_font_bold_checkbox = tk.Checkbutton(root, text="Жирное", variable=style_bold, command=update_font)
 settings_font_bold_checkbox.pack()
 
-settings_font_italic_checkbox = tk.Checkbutton(root, text="Курсивное", variable=style_italic)
+settings_font_italic_checkbox = tk.Checkbutton(root, text="Курсивное", variable=style_italic, command=update_font)
 settings_font_italic_checkbox.pack()
 
-settings_font_underline_checkbox = tk.Checkbutton(root, text="Подчёркнутое", variable=style_underline)
+settings_font_underline_checkbox = tk.Checkbutton(root, text="Подчёркнутое", variable=style_underline, command=update_font)
 settings_font_underline_checkbox.pack()
 
 # Надпись
@@ -85,7 +100,7 @@ origin_txt_entr.pack()
 
 rendered_txt_lbl = tk.Label(root, text="Надпись с текущими настройками:")
 rendered_txt_lbl.pack()
-rendered_txt = tk.Label(root, textvariable=txt_entr, bg="white", font=update_font())
+rendered_txt = tk.Label(root, textvariable=txt_entr, bg="white")
 rendered_txt.pack()
 
 # Передача управления пользователю
