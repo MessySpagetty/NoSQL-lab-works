@@ -34,6 +34,31 @@ def update_font(*args):
     rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color)
 
 
+def if_keys_have_expired(key):
+    value = client.get(MY_PREFIX + key)
+    return value == None
+
+# region подключение к БД
+with open('host', 'r') as file:
+    HOST = file.read()
+with open('passwd', 'r') as file:
+    PASSWORD = file.read()
+client = redis.StrictRedis(host=HOST, password=PASSWORD)
+# endregion 
+
+# Префикс для уникальности ключей, чтобы совместно работать в БД
+MY_PREFIX = "poskitt_22304_"
+
+with open('user_settings.json', 'r') as file:
+    user_settings_local = json.load(file)
+
+# Set a key-value pair
+client.set(MY_PREFIX + 'my_key', 'Hello, Redis!')
+
+# Retrieve the value
+value = client.get(MY_PREFIX + 'my_key')
+
+
 # Создание основного окна и установка его заголовка    
 root = tk.Tk()
 root.title("Настройки текстового сообщения")
@@ -45,9 +70,6 @@ root.geometry(f"{SCR_WIDTH}x{SCR_HEIGHT}")
 # Create a label
 current_user_lbl = tk.Label(root, text="Текущий пользователь:")
 current_user_lbl.pack(pady=10)
-
-with open('user_settings.json', 'r') as file:
-    user_settings = json.load(file)
 
 current_user = tk.StringVar()
 font_name = tk.StringVar()
@@ -62,7 +84,7 @@ style_underline = tk.BooleanVar()
 txt_entr = tk.StringVar()
 
 
-choose_user_combo = ttk.Combobox(root, values=list(user_settings.keys()), textvariable=current_user, state="readonly")
+choose_user_combo = ttk.Combobox(root, values=list(user_settings_local.keys()), textvariable=current_user, state="readonly")
 choose_user_combo.current(0)
 choose_user_combo.pack()
 
@@ -111,26 +133,3 @@ rendered_txt.pack()
 
 # Передача управления пользователю
 root.mainloop()
-
-# region подключение к БД
-
-# with open('host', 'r') as file:
-#     HOST = file.read()  # Reads the entire file
-
-# with open('passwd', 'r') as file:
-#     PASSWORD = file.read()
-
-# client = redis.StrictRedis(host=HOST, password=PASSWORD)
-
-# # Префикс для уникальности ключей, чтобы совместно работать в БД
-# my_prefix = "poskitt_22304_"
-
-# # Set a key-value pair
-# client.set(my_prefix + 'my_key', 'Hello, Redis!')
-
-# # Retrieve the value
-# value = client.get(my_prefix + 'my_key')
-
-# print(value.decode('utf-8'))  # Output: Hello, Redis!
-
-# endregion 
