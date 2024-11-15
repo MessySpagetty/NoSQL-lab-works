@@ -5,9 +5,8 @@ from tkinter import font
 from tkinter import colorchooser
 import json
 
-
 def get_hex(rgb):
-    print(rgb)
+    # print(rgb)
     return "#%02x%02x%02x" % rgb  
 
 def ask_color_handler():
@@ -57,12 +56,17 @@ with open('user_settings.json', 'r') as file:
 if (keys_have_expired(list(user_settings_local.keys())[0])):
     for user in user_settings_local.keys():
         for font_parameter in user_settings_local[user]["font_parameters"]:
+            # print(user_settings_local[user]["font_parameters"][font_parameter])
             client.set(MY_PREFIX + user + font_parameter, user_settings_local[user]["font_parameters"][font_parameter])
+        client.set(MY_PREFIX + user + "example_text", user_settings_local[user]["example_text"])
+        # print(user_settings_local[user]["example_text"])
+        # print("")
+
+        
 
 
 # Retrieve the value
 value = client.get(MY_PREFIX + 'my_key')
-
 
 # Создание основного окна и установка его заголовка    
 root = tk.Tk()
