@@ -5,15 +5,21 @@ from tkinter import font
 from tkinter import colorchooser
 import json
 
+def cnvrt_to_tuple(rgb_string):
+    return (map(int, rgb_string.split()))
+
+
 def get_hex(rgb):
     # print(rgb)
     return "#%02x%02x%02x" % rgb  
+
 
 def ask_color_handler():
     global font_color
     # получение цвета, выбранного пользователем в RGB формате 
     font_color = get_hex(colorchooser.askcolor()[0])
     update_font()
+
 
 def update_font(*args):
     local_font_name = font_name.get()
@@ -31,12 +37,13 @@ def update_font(*args):
     local_underline = "underline" if style_underline.get() else ""
     settings += local_underline
 
-    rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color)
+    rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color.get())
 
 
 def keys_have_expired(key):
     value = client.get(MY_PREFIX + key)
     return value == None
+
 
 # region подключение к БД
 with open('host', 'r') as file:
@@ -52,8 +59,9 @@ MY_PREFIX = "poskitt_22304_"
 with open('user_settings.json', 'r') as file:
     user_settings_local = json.load(file)
 
+curr_user_name = list(user_settings_local.keys()) [0]
 # Загрузка локального файла с настройками в БД, в случае, если на БД настройки пользователей были сброшены
-if (keys_have_expired(list(user_settings_local.keys())[0])):
+if (keys_have_expired(curr_user_name)):
     for user in user_settings_local.keys():
         for font_parameter in user_settings_local[user]["font_parameters"]:
             # print(user_settings_local[user]["font_parameters"][font_parameter])
@@ -62,11 +70,6 @@ if (keys_have_expired(list(user_settings_local.keys())[0])):
         # print(user_settings_local[user]["example_text"])
         # print("")
 
-        
-
-
-# Retrieve the value
-value = client.get(MY_PREFIX + 'my_key')
 
 # Создание основного окна и установка его заголовка    
 root = tk.Tk()
@@ -82,15 +85,19 @@ current_user_lbl.pack(pady=10)
 
 current_user = tk.StringVar()
 font_name = tk.StringVar()
-font_name.trace_add("write", update_font)
 font_size = tk.StringVar()
-font_size.trace_add("write", update_font)
-global font_color
-font_color = "black"
+font_color = tk.StringVar()
 style_bold = tk.BooleanVar()
 style_italic = tk.BooleanVar()
 style_underline = tk.BooleanVar()
 txt_entr = tk.StringVar()
+
+font_name.set(client.get(MY_PREFIX + curr_user_name + "font_name"))
+font_size.set(client.get(MY_PREFIX + curr_user_name + "font_size"))
+rgb_str = client.get(MY_PREFIX + curr_user_name + "font_color")
+font_color.set(get_hex(cnvrt_to_tuple(rgb_str)))
+style
+
 
 
 choose_user_combo = ttk.Combobox(root, values=list(user_settings_local.keys()), textvariable=current_user, state="readonly")
@@ -139,6 +146,10 @@ rendered_txt_lbl = tk.Label(root, text="Надпись с текущими на�
 rendered_txt_lbl.pack()
 rendered_txt = tk.Label(root, textvariable=txt_entr, bg="white")
 rendered_txt.pack()
+
+# Добавление обработчиков на событие изменения поля
+font_name.trace_add("write", update_font)
+font_size.trace_add("write", update_font)
 
 # Передача управления пользователю
 root.mainloop()
