@@ -7,6 +7,7 @@ import json
 
 
 def get_hex(rgb):
+    print(rgb)
     return "#%02x%02x%02x" % rgb  
 
 def ask_color_handler():
@@ -34,7 +35,7 @@ def update_font(*args):
     rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color)
 
 
-def if_keys_have_expired(key):
+def keys_have_expired(key):
     value = client.get(MY_PREFIX + key)
     return value == None
 
@@ -52,8 +53,12 @@ MY_PREFIX = "poskitt_22304_"
 with open('user_settings.json', 'r') as file:
     user_settings_local = json.load(file)
 
-# Set a key-value pair
-client.set(MY_PREFIX + 'my_key', 'Hello, Redis!')
+# Загрузка локального файла с настройками в БД, в случае, если на БД настройки пользователей были сброшены
+if (keys_have_expired(list(user_settings_local.keys())[0])):
+    for user in user_settings_local.keys():
+        for font_parameter in user_settings_local[user]["font_parameters"]:
+            client.set(MY_PREFIX + user + font_parameter, user_settings_local[user]["font_parameters"][font_parameter])
+
 
 # Retrieve the value
 value = client.get(MY_PREFIX + 'my_key')
