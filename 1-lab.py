@@ -90,10 +90,6 @@ is_italic = tk.BooleanVar()
 is_underline = tk.BooleanVar()
 txt_entr = tk.StringVar()
 
-# Инициализация переменных перед отрисовкой окна
-current_user.set(list(user_settings_local.keys())[0])
-get_settings_values(current_user.get())
-
 # Create a label
 current_user_lbl = tk.Label(root, text="Текущий пользователь:")
 current_user_lbl.pack(pady=10)
@@ -144,6 +140,11 @@ rendered_txt_lbl = tk.Label(root, text="Надпись с текущими на�
 rendered_txt_lbl.pack()
 rendered_txt = tk.Label(root, textvariable=txt_entr, bg="white")
 rendered_txt.pack()
+
+# Инициализация переменных перед отрисовкой окна и применение сохранённых изменений
+current_user.set(list(user_settings_local.keys())[0])
+get_settings_values(current_user.get())
+update_font()
 
 # Добавление обработчиков на событие изменения поля
 font_name.trace_add("write", update_font)
