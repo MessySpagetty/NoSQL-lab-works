@@ -13,11 +13,6 @@ def get_hex(rgb: tuple):
     return "#%02x%02x%02x" % rgb  
 
 
-def get_color_from_redis_in_hex(user: str):
-    color_from_redis = client.hget(MY_PREFIX + user, "font_color").decode('utf-8')
-    return get_hex(cnvrt_to_tuple(color_from_redis))
-
-
 def ask_color_handler():
     # получение цвета, выбранного пользователем в RGB формате 
     font_color.set(get_hex(colorchooser.askcolor()[0]))
@@ -27,11 +22,21 @@ def ask_color_handler():
 def get_settings_values(user: str, var_name=None, index=None, mode=None):
     font_name.set(client.hget(MY_PREFIX + user, "font_name").decode("utf-8"))
     font_size.set(client.hget(MY_PREFIX + user, "font_size").decode("utf-8"))
-    font_color.set(get_color_from_redis_in_hex(user))
+    font_color.set(client.hget(MY_PREFIX + user, "font_color").decode("utf-8"))
     is_bold.set(client.hget(MY_PREFIX + user, "is_bold").decode("utf-8"))
     is_italic.set(client.hget(MY_PREFIX + user, "is_italic").decode("utf-8"))
     is_underline.set(client.hget(MY_PREFIX + user, "is_underline").decode("utf-8"))
     txt_entr.set(client.hget(MY_PREFIX + user, "example_text").decode("utf-8"))
+
+
+def set_settings_values(user: str):
+    client.hset(MY_PREFIX + user, "font_name", font_name.get())
+    client.hset(MY_PREFIX + user, "font_size", font_size.get())
+    client.hset(MY_PREFIX + user, "font_color", font_color.get())
+    client.hset(MY_PREFIX + user, "is_bold", int(is_bold.get()))
+    client.hset(MY_PREFIX + user, "is_italic", int(is_italic.get()))
+    client.hset(MY_PREFIX + user, "is_underline", int(is_underline.get()))
+    client.hset(MY_PREFIX + user, "example_text", txt_entr.get())
 
 
 def change_user_wrapper():
@@ -50,8 +55,10 @@ def update_font(var_name=None, index=None, mode=None):
 
     rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color.get())
 
-def save_settings_handler():
-    pass
+
+def save_settings_wrapper():
+    set_settings_values(current_user.get())    
+
 
 # Подключение к БД
 with open('host', 'r') as file:
@@ -95,7 +102,6 @@ current_user_lbl.pack(pady=10)
 choose_user_combo = ttk.Combobox(root, values=list(user_settings_local.keys()), textvariable=current_user, state="readonly")
 choose_user_combo.current(0)
 choose_user_combo.pack()
-
 
 settings_title_lbl = tk.Label(root, text="Задайте настройки для текущего пользователя:")
 settings_title_lbl.pack()
@@ -143,7 +149,7 @@ rendered_txt = tk.Label(root, textvariable=txt_entr, bg="white")
 rendered_txt.pack()
 
 # Кнопка для сохранения изменений
-save_settings_btn = tk.Button(root, text="Сохранить изменения", command=save_settings_handler)
+save_settings_btn = tk.Button(root, text="Сохранить изменения", command=save_settings_wrapper)
 save_settings_btn.pack()
 
 # Инициализация переменных перед отрисовкой окна и применение сохранённых изменений
