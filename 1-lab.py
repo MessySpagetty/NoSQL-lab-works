@@ -5,19 +5,26 @@ from tkinter import font
 from tkinter import colorchooser
 import json
 
-def cnvrt_to_tuple(rgb_string):
-    return (map(int, rgb_string.split()))
+def cnvrt_to_tuple(rgb: str):
+    return tuple(map(int, rgb.split()))
 
-
-def get_hex(rgb):
-    # print(rgb)
+def get_hex(rgb: tuple):
     return "#%02x%02x%02x" % rgb  
+
+def get_color_from_redis_in_hex(user: str):
+    color_from_redis = (client.hget(MY_PREFIX + user, "font_color")).decode('utf-8')
+    return get_hex(cnvrt_to_tuple(color_from_redis))
+
+def get_settings_values(user: str):
+    font_name.set(client.hget(MY_PREFIX + user, "font_name"))
+    font_size.set(client.hget(MY_PREFIX + user, "font_size"))
+    font_color.set(get_color_from_redis_in_hex(user))
+    txt_entr.set(client.hget(MY_PREFIX + user, "example_text"))
 
 
 def ask_color_handler():
-    global font_color
     # получение цвета, выбранного пользователем в RGB формате 
-    font_color = get_hex(colorchooser.askcolor()[0])
+    font_color.set(get_hex(colorchooser.askcolor()[0]))
     update_font()
 
 
@@ -40,18 +47,17 @@ def update_font(*args):
     rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color.get())
 
 
-def keys_have_expired(key):
+def key_have_expired(key):
     value = client.get(MY_PREFIX + key)
     return value == None
 
 
-# region подключение к БД
+# Подключение к БД
 with open('host', 'r') as file:
     HOST = file.read()
 with open('passwd', 'r') as file:
     PASSWORD = file.read()
-client = redis.StrictRedis(host=HOST, password=PASSWORD)
-# endregion 
+client = redis.StrictRedis(host=HOST, password=PASSWORD) 
 
 # Префикс для уникальности ключей, чтобы совместно работать в БД
 MY_PREFIX = "poskitt_22304_"
@@ -61,8 +67,7 @@ with open('user_settings.json', 'r') as file:
 
 # Загрузка локального файла с настройками в БД, в случае, если на БД настройки пользователей были сброшены
 for user in user_settings_local.keys():
-        client.hset(MY_PREFIX + user, mapping=dict(user_settings_local[user]))
-        print(client.hgetall(MY_PREFIX + user))
+    client.hset(MY_PREFIX + user, mapping=dict(user_settings_local[user]))
 
 # Создание основного окна и установка его заголовка    
 root = tk.Tk()
@@ -72,10 +77,7 @@ SCR_WIDTH = root.winfo_screenwidth()
 SCR_HEIGHT = root.winfo_screenheight()
 root.geometry(f"{SCR_WIDTH}x{SCR_HEIGHT}")
 
-# Create a label
-current_user_lbl = tk.Label(root, text="Текущий пользователь:")
-current_user_lbl.pack(pady=10)
-
+# Переменные для динамичского изменения настроек текста
 current_user = tk.StringVar()
 font_name = tk.StringVar()
 font_size = tk.StringVar()
@@ -85,12 +87,13 @@ style_italic = tk.BooleanVar()
 style_underline = tk.BooleanVar()
 txt_entr = tk.StringVar()
 
-# font_name.set(client.get(MY_PREFIX + curr_user_name + "font_name"))
-# font_size.set(client.get(MY_PREFIX + curr_user_name + "font_size"))
-# rgb_str = client.get(MY_PREFIX + curr_user_name + "font_color")
-# font_color.set(get_hex(cnvrt_to_tuple(rgb_str)))
+# Инициализация переменных перед отрисовкой окна
+current_user.set(list(user_settings_local.keys())[0])
+get_settings_values(current_user.get())
 
-
+# Create a label
+current_user_lbl = tk.Label(root, text="Текущий пользователь:")
+current_user_lbl.pack(pady=10)
 
 choose_user_combo = ttk.Combobox(root, values=list(user_settings_local.keys()), textvariable=current_user, state="readonly")
 choose_user_combo.current(0)
