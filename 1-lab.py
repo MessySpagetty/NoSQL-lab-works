@@ -59,17 +59,10 @@ MY_PREFIX = "poskitt_22304_"
 with open('user_settings.json', 'r') as file:
     user_settings_local = json.load(file)
 
-curr_user_name = list(user_settings_local.keys()) [0]
 # Загрузка локального файла с настройками в БД, в случае, если на БД настройки пользователей были сброшены
-if (keys_have_expired(curr_user_name)):
-    for user in user_settings_local.keys():
-        for font_parameter in user_settings_local[user]["font_parameters"]:
-            # print(user_settings_local[user]["font_parameters"][font_parameter])
-            client.set(MY_PREFIX + user + font_parameter, user_settings_local[user]["font_parameters"][font_parameter])
-        client.set(MY_PREFIX + user + "example_text", user_settings_local[user]["example_text"])
-        # print(user_settings_local[user]["example_text"])
-        # print("")
-
+for user in user_settings_local.keys():
+        client.hset(MY_PREFIX + user, mapping=dict(user_settings_local[user]))
+        print(client.hgetall(MY_PREFIX + user))
 
 # Создание основного окна и установка его заголовка    
 root = tk.Tk()
@@ -92,11 +85,10 @@ style_italic = tk.BooleanVar()
 style_underline = tk.BooleanVar()
 txt_entr = tk.StringVar()
 
-font_name.set(client.get(MY_PREFIX + curr_user_name + "font_name"))
-font_size.set(client.get(MY_PREFIX + curr_user_name + "font_size"))
-rgb_str = client.get(MY_PREFIX + curr_user_name + "font_color")
-font_color.set(get_hex(cnvrt_to_tuple(rgb_str)))
-style
+# font_name.set(client.get(MY_PREFIX + curr_user_name + "font_name"))
+# font_size.set(client.get(MY_PREFIX + curr_user_name + "font_size"))
+# rgb_str = client.get(MY_PREFIX + curr_user_name + "font_color")
+# font_color.set(get_hex(cnvrt_to_tuple(rgb_str)))
 
 
 
