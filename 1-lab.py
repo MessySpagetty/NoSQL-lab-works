@@ -41,22 +41,17 @@ def change_user_wrapper():
 
 def update_font(var_name=None, index=None, mode=None):
     local_font_name = font_name.get()
+    local_font_size = int(font_size.get()) if font_size.get() != "" else 12
 
-    font_size_cur = font_size.get()
-    local_font_size = int(font_size_cur) if font_size_cur != "" else 12
-
-    settings = ""
     local_weight = "bold " if is_bold.get() else "normal "
-    settings += local_weight
-
     local_slant = "italic " if is_italic.get() else "roman "
-    settings += local_slant
-    
     local_underline = "underline" if is_underline.get() else ""
-    settings += local_underline
+    settings = local_weight + local_slant + local_underline
 
     rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color.get())
 
+def save_settings_handler():
+    pass
 
 # Подключение к БД
 with open('host', 'r') as file:
@@ -135,16 +130,21 @@ settings_font_italic_checkbox.pack()
 settings_font_underline_checkbox = tk.Checkbutton(root, text="Подчёркнутое", variable=is_underline, command=update_font)
 settings_font_underline_checkbox.pack()
 
-# Надпись
+# Исходная надпись
 origin_txt_lbl = tk.Label(root, text="Исходная надпись:")
 origin_txt_lbl.pack() 
 origin_txt_entr = tk.Entry(root, textvariable=txt_entr)
 origin_txt_entr.pack()
 
+# Надпись с применёнными настройками
 rendered_txt_lbl = tk.Label(root, text="Надпись с текущими настройками:")
 rendered_txt_lbl.pack()
 rendered_txt = tk.Label(root, textvariable=txt_entr, bg="white")
 rendered_txt.pack()
+
+# Кнопка для сохранения изменений
+save_settings_btn = tk.Button(root, text="Сохранить изменения", command=save_settings_handler)
+save_settings_btn.pack()
 
 # Инициализация переменных перед отрисовкой окна и применение сохранённых изменений
 current_user.set(list(user_settings_local.keys())[0])
