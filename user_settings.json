@@ -1,29 +1,23 @@
 {
     "Questionable": {
-        "font_parameters":{
-            "font_name": "Modern", 
-            "font_size": "12",
-            "font_color": "89 232 232",
-            "font_style": "bold"
-        },
+        "font_name": "Modern", 
+        "font_size": "12",
+        "font_color": "89 232 232",
+        "font_style": "bold",
         "example_text": "multiply"
     },
     "Gahjealously": {
-        "font_parameters":{
-            "font_name": "Courier", 
-            "font_size": "6",
-            "font_color": "191 21 85",
-            "font_style": "italic"
-        },
+        "font_name": "Courier", 
+        "font_size": "6",
+        "font_color": "191 21 85",
+        "font_style": "italic",
         "example_text": "conservative"
     },
     "Predetermine": {
-        "font_parameters":{
-            "font_name": "Small fonts", 
-            "font_size": "18",
-            "font_color": "0 128 0",
-            "font_style": "underline"
-        },
+        "font_name": "Small fonts", 
+        "font_size": "18",
+        "font_color": "0 128 0",
+        "font_style": "underline",
         "example_text": "expression"
     }
 }
