@@ -3,21 +3,27 @@
         "font_name": "Modern", 
         "font_size": "12",
         "font_color": "89 232 232",
-        "font_style": "bold",
+        "is_bold": 1,
+        "is_italic": 0,
+        "is_underline": 0,
         "example_text": "multiply"
     },
     "Gahjealously": {
         "font_name": "Courier", 
         "font_size": "6",
         "font_color": "191 21 85",
-        "font_style": "italic",
+        "is_bold": 0,
+        "is_italic": 1,
+        "is_underline": 0,
         "example_text": "conservative"
     },
     "Predetermine": {
         "font_name": "Small fonts", 
         "font_size": "18",
         "font_color": "0 128 0",
-        "font_style": "underline",
+        "is_bold": 0,
+        "is_italic": 0,
+        "is_underline": 1,
         "example_text": "expression"
     }
 }
