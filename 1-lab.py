@@ -16,10 +16,13 @@ def get_color_from_redis_in_hex(user: str):
     return get_hex(cnvrt_to_tuple(color_from_redis))
 
 def get_settings_values(user: str):
-    font_name.set(client.hget(MY_PREFIX + user, "font_name"))
-    font_size.set(client.hget(MY_PREFIX + user, "font_size"))
+    font_name.set(client.hget(MY_PREFIX + user, "font_name").decode("utf-8"))
+    font_size.set(client.hget(MY_PREFIX + user, "font_size").decode("utf-8"))
     font_color.set(get_color_from_redis_in_hex(user))
-    txt_entr.set(client.hget(MY_PREFIX + user, "example_text"))
+    is_bold.set(client.hget(MY_PREFIX + user, "is_bold").decode("utf-8"))
+    is_italic.set(client.hget(MY_PREFIX + user, "is_italic").decode("utf-8"))
+    is_underline.set(client.hget(MY_PREFIX + user, "is_underline").decode("utf-8"))
+    txt_entr.set(client.hget(MY_PREFIX + user, "example_text").decode("utf-8"))
 
 
 def ask_color_handler():
@@ -35,13 +38,13 @@ def update_font(*args):
     local_font_size = int(font_size_cur) if font_size_cur != "" else 12
 
     settings = ""
-    local_weight = "bold " if style_bold.get() else "normal "
+    local_weight = "bold " if is_bold.get() else "normal "
     settings += local_weight
 
-    local_slant = "italic " if style_italic.get() else "roman "
+    local_slant = "italic " if is_italic.get() else "roman "
     settings += local_slant
     
-    local_underline = "underline" if style_underline.get() else ""
+    local_underline = "underline" if is_underline.get() else ""
     settings += local_underline
 
     rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color.get())
@@ -82,9 +85,9 @@ current_user = tk.StringVar()
 font_name = tk.StringVar()
 font_size = tk.StringVar()
 font_color = tk.StringVar()
-style_bold = tk.BooleanVar()
-style_italic = tk.BooleanVar()
-style_underline = tk.BooleanVar()
+is_bold = tk.BooleanVar()
+is_italic = tk.BooleanVar()
+is_underline = tk.BooleanVar()
 txt_entr = tk.StringVar()
 
 # Инициализация переменных перед отрисовкой окна
@@ -122,13 +125,13 @@ settings_font_color_clrchooser.pack()
 settings_font_style_lbl = tk.Label(root, text="Начертание:")
 settings_font_style_lbl.pack()
 
-settings_font_bold_checkbox = tk.Checkbutton(root, text="Жирное", variable=style_bold, command=update_font)
+settings_font_bold_checkbox = tk.Checkbutton(root, text="Жирное", variable=is_bold, command=update_font)
 settings_font_bold_checkbox.pack()
 
-settings_font_italic_checkbox = tk.Checkbutton(root, text="Курсивное", variable=style_italic, command=update_font)
+settings_font_italic_checkbox = tk.Checkbutton(root, text="Курсивное", variable=is_italic, command=update_font)
 settings_font_italic_checkbox.pack()
 
-settings_font_underline_checkbox = tk.Checkbutton(root, text="Подчёркнутое", variable=style_underline, command=update_font)
+settings_font_underline_checkbox = tk.Checkbutton(root, text="Подчёркнутое", variable=is_underline, command=update_font)
 settings_font_underline_checkbox.pack()
 
 # Надпись
