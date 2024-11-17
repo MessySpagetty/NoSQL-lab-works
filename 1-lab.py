@@ -8,14 +8,23 @@ import json
 def cnvrt_to_tuple(rgb: str):
     return tuple(map(int, rgb.split()))
 
+
 def get_hex(rgb: tuple):
     return "#%02x%02x%02x" % rgb  
 
+
 def get_color_from_redis_in_hex(user: str):
-    color_from_redis = (client.hget(MY_PREFIX + user, "font_color")).decode('utf-8')
+    color_from_redis = client.hget(MY_PREFIX + user, "font_color").decode('utf-8')
     return get_hex(cnvrt_to_tuple(color_from_redis))
 
-def get_settings_values(user: str):
+
+def ask_color_handler():
+    # получение цвета, выбранного пользователем в RGB формате 
+    font_color.set(get_hex(colorchooser.askcolor()[0]))
+    update_font()
+
+
+def get_settings_values(user: str, var_name=None, index=None, mode=None):
     font_name.set(client.hget(MY_PREFIX + user, "font_name").decode("utf-8"))
     font_size.set(client.hget(MY_PREFIX + user, "font_size").decode("utf-8"))
     font_color.set(get_color_from_redis_in_hex(user))
@@ -25,13 +34,12 @@ def get_settings_values(user: str):
     txt_entr.set(client.hget(MY_PREFIX + user, "example_text").decode("utf-8"))
 
 
-def ask_color_handler():
-    # получение цвета, выбранного пользователем в RGB формате 
-    font_color.set(get_hex(colorchooser.askcolor()[0]))
+def change_user_wrapper():
+    get_settings_values(current_user.get())
     update_font()
 
 
-def update_font(*args):
+def update_font(var_name=None, index=None, mode=None):
     local_font_name = font_name.get()
 
     font_size_cur = font_size.get()
@@ -48,11 +56,6 @@ def update_font(*args):
     settings += local_underline
 
     rendered_txt.config(font=(local_font_name, local_font_size, settings.strip()), fg=font_color.get())
-
-
-def key_have_expired(key):
-    value = client.get(MY_PREFIX + key)
-    return value == None
 
 
 # Подключение к БД
@@ -90,7 +93,7 @@ is_italic = tk.BooleanVar()
 is_underline = tk.BooleanVar()
 txt_entr = tk.StringVar()
 
-# Create a label
+# Выбор пользователя
 current_user_lbl = tk.Label(root, text="Текущий пользователь:")
 current_user_lbl.pack(pady=10)
 
@@ -102,12 +105,14 @@ choose_user_combo.pack()
 settings_title_lbl = tk.Label(root, text="Задайте настройки для текущего пользователя:")
 settings_title_lbl.pack()
 
+# Выбор шрифта
 settings_font_name_lbl = tk.Label(root, text="Шрифт:")
 settings_font_name_lbl.pack()
 settings_font_name_combo = ttk.Combobox(root, values=list(font.families()), textvariable=font_name, state="readonly")
 settings_font_name_combo.current(0)
 settings_font_name_combo.pack()
 
+# Выбор размера текста
 settings_font_size_lbl = tk.Label(root, text="Размер шрифта:")
 settings_font_size_lbl.pack()
 settings_font_size_entr = tk.Entry(root, textvariable=font_size)
@@ -146,7 +151,8 @@ current_user.set(list(user_settings_local.keys())[0])
 get_settings_values(current_user.get())
 update_font()
 
-# Добавление обработчиков на событие изменения поля
+# Добавление обработчиков на событие изменения поля, так как label и combobox не поддерживают нативно параметр command
+current_user.trace_add("write", lambda x, y, z: change_user_wrapper())
 font_name.trace_add("write", update_font)
 font_size.trace_add("write", update_font)
 
