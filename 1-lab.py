@@ -74,8 +74,10 @@ with open('user_settings.json', 'r') as file:
     user_settings_local = json.load(file)
 
 # Загрузка локального файла с настройками в БД, в случае, если на БД настройки пользователей были сброшены
-for user in user_settings_local.keys():
-    client.hset(MY_PREFIX + user, mapping=dict(user_settings_local[user]))
+if client.get(MY_PREFIX + "is_set") is None:
+    client.set(MY_PREFIX + "is_set", 1)
+    for user in user_settings_local.keys():
+        client.hset(MY_PREFIX + user, mapping=dict(user_settings_local[user]))
 
 # Создание основного окна и установка его заголовка    
 root = tk.Tk()
