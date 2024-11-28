@@ -5,6 +5,18 @@ from tkinter import font
 from tkinter import colorchooser
 import json
 
+
+def init_tree():
+    columns = ("Surname", "Score")
+    tree = ttk.Treeview(root, columns=columns, show="headings")
+    tree.heading("Surname", text="Фамилия")
+    tree.heading("Score", text="Сумма баллов")
+    for sp in sportsmans:
+        tree.insert("", "end", values=(sp, 0))
+
+    return tree
+
+
 # Подключение к БД
 with open('host', 'r') as file:
     HOST = file.read()
@@ -57,14 +69,8 @@ save_score = tk.Button(root, text="Сохранить")
 save_score.pack(pady=10)
 
 # Рейтинг-лист
-columns = ("Surname", "Score")
-rating_tree = ttk.Treeview(root, columns=columns, show="headings")
-rating_tree.heading("Surname", text="Фамилия")
-rating_tree.heading("Score", text="Сумма баллов")
-
-for sp in sportsmans:
-    rating_tree.insert("", "end", values=(sp, 0))
-rating_tree.pack(pady=10)
+rating_tree = init_tree()
+rating_tree.pack()
 
 # Передача управления пользователю
 root.mainloop()
