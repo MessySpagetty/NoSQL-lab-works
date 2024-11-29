@@ -6,7 +6,17 @@ from tkinter import colorchooser
 import json
 
 
-def init_tree():
+def save_results(judge, sporsman, score):
+    raise NotImplementedError
+
+
+def init_leaderbord(judges, sportsmans):
+    for ju in judges:
+        for sp in sportsmans: 
+            client.zadd(MY_PREFIX + ju, { sp: 0 })
+
+
+def init_tree(sportsmans):
     columns = ("Surname", "Score")
     tree = ttk.Treeview(root, columns=columns, show="headings")
     tree.heading("Surname", text="Фамилия")
@@ -65,12 +75,14 @@ score_entry = tk.Entry(root, textvariable=given_score)
 score_entry.pack()
 
 # Сохранение выставленного балла
-save_score = tk.Button(root, text="Сохранить")
+save_score = tk.Button(root, text="Сохранить", command=save_results)
 save_score.pack(pady=10)
 
 # Рейтинг-лист
 rating_tree = init_tree()
 rating_tree.pack()
 
+
+init_leaderbord(judges, sportsmans)
 # Передача управления пользователю
 root.mainloop()
