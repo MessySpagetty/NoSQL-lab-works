@@ -6,19 +6,49 @@ from tkinter import colorchooser
 import json
 
 
-def print_set(sorted_set):
-    ascending = client.zrange(sorted_set, 0, -1, withscores=True)
+def print_set(sorted_set_name, pref="poskitt_22304_"):
+    ascending = client.zrange(pref + sorted_set_name, 0, -1, withscores=True)
     print(ascending)
 
 
-def save_results(judge, sporsman, score):
-    raise NotImplementedError
+def update_tree(leaderboard, tree):
+    for row in tree.get_children():
+        tree.delete(row)
+
+    for sp in leaderboard:
+        tree.insert("", "end", values=sp)
 
 
-def update_leaderbord(judges, sportsmans):
+def get_leaderboard(judges):
+    judges = [MY_PREFIX + ju for ju in judges]
+    client.zunionstore(MY_PREFIX + "leaderboard", judges, aggregate="sum")
+    return client.zrange(MY_PREFIX + "leaderboard", 0, -1, desc=True, withscores=True)
+
+def update_leaderboard(judge, sportsman, score):
+    client.zincrby(MY_PREFIX + judge, score, sportsman)
+
+
+def save_results(judge, sportsman, score, tree):
+    update_leaderboard(judge, sportsman, score)
+    leaderboard = get_leaderboard(judges)
+    decoded_leaderboard = ((sp[0].decode('utf-8'), int(sp[1])) for sp in leaderboard)
+    update_tree(decoded_leaderboard, tree)
+
+
+
+def save_results_wrapper():
+    j = curr_judge.get()
+    sp = curr_sportsman.get()
+    sc = given_score.get()
+    save_results(j, sp, sc, rating_tree)
+
+
+def init_leaderbord(judges, sportsmans):
+    # Три таблицы, по одной на каждого судью. В каждой таблице хранятся отсортированные множества -- 
+    # спортсмены и выставленные им этим судьёй баллы
     for ju in judges:
-        client.zadd(MY_PREFIX + ju, sportsmans)
-    print_set(MY_PREFIX + ju)
+        client.zadd(MY_PREFIX + ju, mapping=sportsmans)
+
 
 def init_tree(sportsmans):
     columns = ("Surname", "Score")
@@ -67,7 +97,7 @@ judge_combo.pack()
 # Выбор спортсмена
 sportsman_lbl = tk.Label(root, text="Спортсмен:").pack(pady=10)
 
-sportsman_combo = ttk.Combobox(root, values=sportsmans, textvariable=curr_sportsman, state="readonly")
+sportsman_combo = ttk.Combobox(root, values=list(sportsmans.keys()), textvariable=curr_sportsman, state="readonly")
 sportsman_combo.current(0)
 sportsman_combo.pack()
 
@@ -78,15 +108,14 @@ score_entry = tk.Entry(root, textvariable=given_score)
 score_entry.pack()
 
 # Сохранение выставленного балла
-save_score = tk.Button(root, text="Сохранить", command=save_results)
+save_score = tk.Button(root, text="Сохранить", command=save_results_wrapper)
 save_score.pack(pady=10)
 
 # Рейтинг-лист
 rating_tree = init_tree(sportsmans)
 rating_tree.pack()
 
-
-update_leaderbord(judges, sportsmans)
+init_leaderbord(judges, sportsmans)
 
 # Передача управления пользователю
 root.mainloop()
