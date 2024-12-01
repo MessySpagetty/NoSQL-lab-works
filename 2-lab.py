@@ -6,24 +6,27 @@ from tkinter import colorchooser
 import json
 
 
+def print_set(sorted_set):
+    ascending = client.zrange(sorted_set, 0, -1, withscores=True)
+    print(ascending)
+
+
 def save_results(judge, sporsman, score):
     raise NotImplementedError
 
 
-def init_leaderbord(judges, sportsmans):
+def update_leaderbord(judges, sportsmans):
     for ju in judges:
-        for sp in sportsmans: 
-            client.zadd(MY_PREFIX + ju, { sp: 0 })
-
+        client.zadd(MY_PREFIX + ju, sportsmans)
+    print_set(MY_PREFIX + ju)
 
 def init_tree(sportsmans):
     columns = ("Surname", "Score")
     tree = ttk.Treeview(root, columns=columns, show="headings")
     tree.heading("Surname", text="Фамилия")
     tree.heading("Score", text="Сумма баллов")
-    for sp in sportsmans:
-        tree.insert("", "end", values=(sp, 0))
-
+    for sp in sportsmans.keys():
+        tree.insert("", "end", values=(sp, sportsmans[sp]))
     return tree
 
 
@@ -52,7 +55,7 @@ given_score = tk.StringVar()
 
 # Список судей и спортсменов соответственно
 judges = ("Mr. Red", "Mr. Green", "Mr. Blue")
-sportsmans = ("Faster", "Higher", "Stronger")
+sportsmans = {"Faster": 0, "Higher": 0, "Stronger": 0}
 
 # Выбор судьи
 judge_lbl = tk.Label(root, text="Судья:").pack(pady=10)
@@ -79,10 +82,11 @@ save_score = tk.Button(root, text="Сохранить", command=save_results)
 save_score.pack(pady=10)
 
 # Рейтинг-лист
-rating_tree = init_tree()
+rating_tree = init_tree(sportsmans)
 rating_tree.pack()
 
 
-init_leaderbord(judges, sportsmans)
+update_leaderbord(judges, sportsmans)
+
 # Передача управления пользователю
 root.mainloop()
