@@ -6,15 +6,23 @@ from tkinter import colorchooser
 import json
 
 
+def make_sportsman_unavalible_for_judge(judges, judge, sportsman):
+    judges[judge][sportsman]=False
+
+
 def update_avalibale_sportsmen(judge, judges, sp_combo):
     avalibale_sportsmans = []
     for sportsman in judges[judge]:
         if judges[judge][sportsman]:
             avalibale_sportsmans.append(sportsman)
     sp_combo.configure(values=avalibale_sportsmans)
+    if sp_combo['values']:
+        sp_combo.current(0)
+    else:
+        sp_combo.set('')
 
 
-def update_avalibale_sportsmen_wrapper():
+def update_avalibale_sportsmen_wrapper(*args):
     j = curr_judge.get()
     update_avalibale_sportsmen(j, judges, sportsman_combo)
 
@@ -42,6 +50,7 @@ def save_results(judge, sportsman, score, judges, tree):
     leaderboard = get_leaderboard(judges)
     decoded_leaderboard = ((sp[0].decode('utf-8'), int(sp[1])) for sp in leaderboard)
     update_leaderboard_tree(decoded_leaderboard, tree)
+    
 
 
 def save_results_wrapper():
@@ -49,6 +58,8 @@ def save_results_wrapper():
     sp = curr_sportsman.get()
     sc = given_score.get()
     save_results(j, sp, sc, list(judges.keys()), rating_tree)
+    make_sportsman_unavalible_for_judge(judges, j, sp)
+    update_avalibale_sportsmen_wrapper()
 
 
 def init_leaderbord(judges, sportsmans):
@@ -131,7 +142,7 @@ rating_tree.pack()
 init_leaderbord(list(judges.keys()), sportsmans)
 
 # Обработчик выбора судьи
-curr_judge.trace_add(update_avalibale_sportsmen_wrapper)
+curr_judge.trace_add('write', update_avalibale_sportsmen_wrapper)
 
 # Передача управления пользователю
 root.mainloop()
