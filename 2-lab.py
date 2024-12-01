@@ -6,7 +6,20 @@ from tkinter import colorchooser
 import json
 
 
-def update_tree(leaderboard, tree):
+def update_avalibale_sportsmen(judge, judges, sp_combo):
+    avalibale_sportsmans = []
+    for sportsman in judges[judge]:
+        if judges[judge][sportsman]:
+            avalibale_sportsmans.append(sportsman)
+    sp_combo.configure(values=avalibale_sportsmans)
+
+
+def update_avalibale_sportsmen_wrapper():
+    j = curr_judge.get()
+    update_avalibale_sportsmen(j, judges, sportsman_combo)
+
+
+def update_leaderboard_tree(leaderboard, tree):
     for row in tree.get_children():
         tree.delete(row)
 
@@ -24,18 +37,18 @@ def update_leaderboard(judge, sportsman, score):
     client.zincrby(MY_PREFIX + judge, score, sportsman)
 
 
-def save_results(judge, sportsman, score, tree):
+def save_results(judge, sportsman, score, judges, tree):
     update_leaderboard(judge, sportsman, score)
     leaderboard = get_leaderboard(judges)
     decoded_leaderboard = ((sp[0].decode('utf-8'), int(sp[1])) for sp in leaderboard)
-    update_tree(decoded_leaderboard, tree)
+    update_leaderboard_tree(decoded_leaderboard, tree)
 
 
 def save_results_wrapper():
     j = curr_judge.get()
     sp = curr_sportsman.get()
     sc = given_score.get()
-    save_results(j, sp, sc, rating_tree)
+    save_results(j, sp, sc, list(judges.keys()), rating_tree)
 
 
 def init_leaderbord(judges, sportsmans):
@@ -78,14 +91,19 @@ curr_judge = tk.StringVar()
 curr_sportsman = tk.StringVar()
 given_score = tk.StringVar()
 
-# Список судей и спортсменов соответственно
-judges = ("Mr. Red", "Mr. Green", "Mr. Blue")
+# Словарь судей (для поддержки выставления оценок по раундам)
+judges = {
+    "Mr. Red": {"Faster": True, "Higher": True, "Stronger": True}, 
+    "Mr. Green": {"Faster": True, "Higher": True, "Stronger": True}, 
+    "Mr. Blue": {"Faster": True, "Higher": True, "Stronger": True}
+}
+
 sportsmans = {"Faster": 0, "Higher": 0, "Stronger": 0}
 
 # Выбор судьи
 judge_lbl = tk.Label(root, text="Судья:").pack(pady=10)
 
-judge_combo = ttk.Combobox(root, values=judges, textvariable=curr_judge, state="readonly")
+judge_combo = ttk.Combobox(root, values=list(judges.keys()), textvariable=curr_judge, state="readonly")
 judge_combo.current(0)
 judge_combo.pack()
 
@@ -110,7 +128,10 @@ save_score.pack(pady=10)
 rating_tree = init_tree(sportsmans)
 rating_tree.pack()
 
-init_leaderbord(judges, sportsmans)
+init_leaderbord(list(judges.keys()), sportsmans)
+
+# Обработчик выбора судьи
+curr_judge.trace_add(update_avalibale_sportsmen_wrapper)
 
 # Передача управления пользователю
 root.mainloop()
