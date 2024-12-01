@@ -6,11 +6,6 @@ from tkinter import colorchooser
 import json
 
 
-def print_set(sorted_set_name, pref="poskitt_22304_"):
-    ascending = client.zrange(pref + sorted_set_name, 0, -1, withscores=True)
-    print(ascending)
-
-
 def update_tree(leaderboard, tree):
     for row in tree.get_children():
         tree.delete(row)
@@ -24,6 +19,7 @@ def get_leaderboard(judges):
     client.zunionstore(MY_PREFIX + "leaderboard", judges, aggregate="sum")
     return client.zrange(MY_PREFIX + "leaderboard", 0, -1, desc=True, withscores=True)
 
+
 def update_leaderboard(judge, sportsman, score):
     client.zincrby(MY_PREFIX + judge, score, sportsman)
 
@@ -33,7 +29,6 @@ def save_results(judge, sportsman, score, tree):
     leaderboard = get_leaderboard(judges)
     decoded_leaderboard = ((sp[0].decode('utf-8'), int(sp[1])) for sp in leaderboard)
     update_tree(decoded_leaderboard, tree)
-
 
 
 def save_results_wrapper():
