@@ -5,6 +5,19 @@ from tkinter import font
 from tkinter import colorchooser
 import json
 
+def make_all_sportsmen_unscored():
+    for judge in judges.keys():
+        for sportsman in judges[judge]:
+            judges[judge][sportsman] = True
+    
+
+def are_all_sportsmen_scored():
+    for judge in judges.keys():
+        for sportsman in judges[judge]:
+            if judges[judge][sportsman]:
+                return False
+    return True
+
 
 def make_sportsman_unavalible_for_judge(judges, judge, sportsman):
     judges[judge][sportsman]=False
@@ -50,7 +63,6 @@ def save_results(judge, sportsman, score, judges, tree):
     leaderboard = get_leaderboard(judges)
     decoded_leaderboard = ((sp[0].decode('utf-8'), int(sp[1])) for sp in leaderboard)
     update_leaderboard_tree(decoded_leaderboard, tree)
-    
 
 
 def save_results_wrapper():
@@ -59,6 +71,8 @@ def save_results_wrapper():
     sc = given_score.get()
     save_results(j, sp, sc, list(judges.keys()), rating_tree)
     make_sportsman_unavalible_for_judge(judges, j, sp)
+    if are_all_sportsmen_scored():
+        make_all_sportsmen_unscored()
     update_avalibale_sportsmen_wrapper()
 
 
