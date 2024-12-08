@@ -61,8 +61,26 @@ cl_name = "football_teams_and_mathes"
 db.create_collection(cl_name, check_exists=False)
 
 collection = db[cl_name]
-db[cl_name].insert_one({"team" : "Динамо"})
-db[cl_name].insert_one({"team" : "Спартак"})
+db[cl_name].insert_one({"type" : "Команда",
+                        "hometown": "Санкт_Петербург",
+                        "trainer": "Суровый Антон Васильевич",
+                        "start_position": [
+                            {'player_name': 'Иван Иванов Иванович', 'position': 'Вратарь'},
+                            {'player_name': 'Петр Петров Петрович', 'position': 'Защитник'},
+                            {'player_name': 'Сергей Сергеев Сергеевич', 'position': 'Защитник'},
+                            {'player_name': 'Александр Александров Александрович', 'position': 'Защитник'},
+                            {'player_name': 'Дмитрий Дмитриев Дмитриевич', 'position': 'Защитник'},
+                            {'player_name': 'Владимир Владимиров Владимирович', 'position': 'Полузащитник'},
+                            {'player_name': 'Евгений Евгеньев Евгеньевич', 'position': 'Полузащитник'},
+                            {'player_name': 'Николай Николаев Николаевич', 'position': 'Полузащитник'},
+                            {'player_name': 'Антон Антонов Антонович', 'position': 'Нападающий'},
+                            {'player_name': 'Максим Максимов Максимович', 'position': 'Нападающий'}
+                        ],
+                        "substitute_players": [
+                            
+                        ]})
+
+db[cl_name].insert_one({"type" : "Игра"})
 
 # Создание основного окна и установка его заголовка    
 root = tk.Tk()
