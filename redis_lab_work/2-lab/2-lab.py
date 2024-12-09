@@ -1,9 +1,7 @@
 import redis
 import tkinter.ttk as ttk
 import tkinter as tk
-from tkinter import font
-from tkinter import colorchooser
-import json
+
 
 def make_all_sportsmen_unscored():
     for judge in judges.keys():
@@ -32,7 +30,8 @@ def update_avalibale_sportsmen(judge, judges, sp_combo):
     if sp_combo['values']:
         sp_combo.current(0)
     else:
-        sp_combo.set('')
+        sp_combo.configure(values=[''])
+        sp_combo.current(0) 
 
 
 def update_avalibale_sportsmen_wrapper(*args):
@@ -55,7 +54,8 @@ def get_leaderboard(judges):
 
 
 def update_leaderboard(judge, sportsman, score):
-    client.zincrby(MY_PREFIX + judge, score, sportsman)
+    if sportsman != '':
+        client.zincrby(MY_PREFIX + judge, score, sportsman)
 
 
 def save_results(judge, sportsman, score, judges, tree):
@@ -142,8 +142,10 @@ sportsman_combo.pack()
 # Выставление баллов
 sportsman_lbl = tk.Label(root, text="Выставить баллы:").pack(pady=10)
 
-score_entry = tk.Entry(root, textvariable=given_score)
-score_entry.pack()
+avalibale_scores = [sc for sc in range(1, 11)]
+score_combo = ttk.Combobox(root, textvariable=given_score, values=avalibale_scores, state="readonly")
+score_combo.current(0)
+score_combo.pack()
 
 # Сохранение выставленного балла
 save_score = tk.Button(root, text="Сохранить", command=save_results_wrapper)
