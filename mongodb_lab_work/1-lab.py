@@ -160,12 +160,97 @@ db[cl_name].insert_one({"type" : "Игра",
                         ],
                         "gate_strikes": [
                             {"player_name": "Иван Сергеев Сергеевич",
-                            "minute": 10,
+                            "minute": 41,
                             "pass": "Антон Тимофеев Антонович",
                             "position": "Нападающий"
                             }
                         ]
                         })
+
+db[cl_name].insert_one({"type": "Игра",
+                        "date_of_match": "13.10.2024",
+                        "match_score": "1-1",
+                        "yellow-red-cards": [
+                            {
+                                "color": "yellow",
+                                "player_name": "Ярослав Леонидович Попов",
+                                "minute": 18,
+                                "reason": "Опасная игра"
+                            }
+                        ],
+                        "goals": [
+                            {
+                                "player_name": "Мария Сергеевна Лисина",
+                                "minute": 33,
+                                "pass": "Александр Викторович Зайцев",
+                                "position": "Полузащитник"
+                            },
+                            {
+                                "player_name": "Владислав Михайлович Гребенщиков",
+                                "minute": 70,
+                                "pass": "Денис Анатольевич Гаврилов",
+                                "position": "Нападающий"
+                            }
+                        ],
+                        "penalties": [],
+                        "gate_strikes": [
+                            {
+                                "player_name": "Василий Степанович Чернов",
+                                "minute": 55,
+                                "pass": "Максим Игоревич Борисов",
+                                "position": "Нападающий"
+                            }
+                        ]
+                    })
+
+db[cl_name].insert_one({"type": "Игра",
+                        "date_of_match": "12.10.2024",
+                        "match_score": "2-3",
+                        "yellow-red-cards": [
+                            {
+                                "color": "yellow",
+                                "player_name": "Алексей Владимирович Смирнов",
+                                "minute": 23,
+                                "reason": "Необоснованное задержание соперника"
+                            },
+                            {
+                                "color": "red",
+                                "player_name": "Дмитрий Павлович Иванов",
+                                "minute": 75,
+                                "reason": "Жесткая игра"
+                            }
+                        ],
+                        "goals": [
+                            {
+                                "player_name": "Анна Викторовна Кузнецова",
+                                "minute": 30,
+                                "pass": "Олег Анатольевич Орлов",
+                                "position": "Нападающий"
+                            },
+                            {
+                                "player_name": "Саша Игоревич Михайлов",
+                                "minute": 82,
+                                "pass": "Игорь Александрович Волков",
+                                "position": "Нападающий"
+                            }
+                        ],
+                        "penalties": [
+                            {
+                                "player_name": "Кирилл Викторович Федоров",
+                                "minute": 65,
+                                "pass": "Анатолий Борисович Левин",
+                                "position": "Пенальти"
+                            }
+                        ],
+                        "gate_strikes": [
+                            {
+                                "player_name": "Игорь Сергеевич Ковальчук",
+                                "minute": 40,
+                                "pass": "Сергей Николаевич Устинов",
+                                "position": "Нападающий"
+                            }
+                        ]
+                    })
 
 # Создание основного окна и установка его заголовка    
 root = tk.Tk()
