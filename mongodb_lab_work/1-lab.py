@@ -2,62 +2,69 @@ from pymongo.mongo_client import MongoClient
 import tkinter.ttk as ttk
 import tkinter as tk
 import json
+from bson import json_util
 
-
-def get_team_documents(collection):
-    query = {'type': 'Команда'}
-    projection = {'team_name': 1}
-    cursor = collection.find(query, projection)
-    for doc in cursor:
-        documents_name[doc["_id"]] = f"Команда: {doc.get('team_name', 'Неизвестно')}"
-
-
-def get_game_documents(collection):
-    query = {'type': 'Матч'}
-    projection = {'date_of_match': 1}
-    cursor = collection.find(query, projection)
-    for doc in cursor:
-        documents_name[doc["_id"]] = f"Матч: {doc.get('date_of_match', 'Неизвестно')}"
-
-
-
-
-
-def get_all_documents():
+def get_all_documents_projected():
     collection = db[cl_name]
     projection = {"type" : 1, "name" : 1}
     cursor = collection.find(projection = projection)
+    i = 1
     for doc in cursor:
-        documents_name[doc["_id"]] = f"Тип: {doc.get('type', 'неизвестный')}. Название: \"{doc.get('name', 'неизвестно')}\""
+        documents_name[doc["_id"]] = f"{i}. Тип: {doc.get('type', 'неизвестный')}. Название: {doc.get('name', 'не определено')}"
+        i += 1
 
     
 def update_docs_combo():
-    get_all_documents()
+    get_all_documents_projected()
     vals = [documents_name[k] for k in documents_name]
     docs_combo.configure(values=vals)
     
 
 def show_documents():
-    raise NotImplementedError
+    collection = db[cl_name]
+    documents = list(collection.find())
+    for doc in collection.find():
+        doc_str = json_util.dumps(doc, indent=2, ensure_ascii=False)
+        print(doc_str)
+        docs_content_txt.insert(tk.END, doc_str + "\n------------------------------------\n")
 
 
 def save_document():
     raise NotImplementedError
 
-
+    
 def insert_into_document_wrapper():
     doc_name = curr_doc.get()
-    k = key_input.get()
-    v = value_input.get()
+    key = key_input.get()
+    value = value_input.get()
     collection = db[cl_name]
-    insert_into_document(collection, doc_id, k, v)
-    update_docs_combo()
+    doc_id = None
+    for k, v in documents_name.items():
+        if v == doc_name:
+            doc_id = k
+            break
+    if doc_id:
+        insert_into_document(collection, doc_id, key, value)
+        cur_pos = docs_combo.current()
+        update_docs_combo()
+        docs_combo.current(cur_pos)
+
+
+def make_nested_dict(key, value):
+    keys = key.split('.')
+    last_key = keys[-1]
+    nested_dict = {}
+    current_level = nested_dict
+    for k in keys[:-1]:
+        current_level[k] = {}
+        current_level = current_level[k]
+    current_level[last_key] = value
+    return nested_dict
 
 
 def insert_into_document(collection, document_id, key, value):
-    target = { f"_id = { document_id }" }
-    new_doc = { f"{key} : {value}" }
-    collection.insert_one(target, new_doc)
+    target = {"_id": document_id }
+    collection.update_one(target, {'$set' : make_nested_dict(key, value)}, upsert=False)
 
 
 def create_document():
@@ -101,8 +108,7 @@ curr_doc = tk.StringVar()
 document_name_input = tk.StringVar()
 key_input = tk.StringVar()
 value_input = tk.StringVar()
-
-curr_doc_content = ""
+string_to_display = tk.StringVar()
 
 tk.Label(root, text="Текущий документ:").pack(pady=10)
 
@@ -121,10 +127,14 @@ tk.Entry(root, textvariable=key_input).pack()
 tk.Label(root, text="Значение:").pack()
 tk.Entry(root, textvariable=value_input).pack()
 
-tk.Button(root, text="Добавить ключ-значение в текущий документ", command=insert_into_document).pack(pady=10)
+tk.Button(root, text="Добавить ключ-значение в текущий документ", command=insert_into_document_wrapper).pack(pady=10)
 
 tk.Button(root, text="Сохранить документ", command=save_document).pack(pady=10)
 
 tk.Button(root, text="Показать документы", command=show_documents).pack(pady=10)
+
+docs_content_txt = tk.Text(root)
+docs_content_txt.pack()
+
 
 root.mainloop()
