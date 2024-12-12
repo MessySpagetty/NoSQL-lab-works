@@ -20,22 +20,15 @@ def get_game_documents(collection):
         documents_name[doc["_id"]] = f"Матч: {doc.get('date_of_match', 'Неизвестно')}"
 
 
-def get_undefined_documents(collection):
-    query = {
-        "type": {
-            "$nin": ["Матч", "Команда"]
-        }
-    }
-    cursor = collection.find(query)
-    for doc in cursor:
-        documents_name[doc["_id"]] = f"Тип: {doc.get('type', 'неизвестный')}, id: {doc['_id']}"
+
 
 
 def get_all_documents():
     collection = db[cl_name]
-    get_game_documents(collection)  
-    get_team_documents(collection)
-    get_undefined_documents(collection)
+    projection = {"type" : 1, "name" : 1}
+    cursor = collection.find(projection = projection)
+    for doc in cursor:
+        documents_name[doc["_id"]] = f"Тип: {doc.get('type', 'неизвестный')}. Название: \"{doc.get('name', 'неизвестно')}\""
 
     
 def update_docs_combo():
@@ -113,7 +106,7 @@ curr_doc_content = ""
 
 tk.Label(root, text="Текущий документ:").pack(pady=10)
 
-docs_combo = ttk.Combobox(root, width=35, textvariable=curr_doc, state="readonly")
+docs_combo = ttk.Combobox(root, width=50, textvariable=curr_doc, state="readonly")
 update_docs_combo()
 docs_combo.current(0)
 docs_combo.pack()
