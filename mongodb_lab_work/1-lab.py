@@ -64,7 +64,7 @@ def insert_into_document_wrapper():
 def insert_into_document(collection, document_id, key, value):
     target = { f"_id = { document_id }" }
     new_doc = { f"{key} : {value}" }
-    collection.update_one(target, new_doc)
+    collection.insert_one(target, new_doc)
 
 
 def create_document():
