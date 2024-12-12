@@ -26,7 +26,8 @@ def show_documents():
     for doc in collection.find():
         doc_str = json_util.dumps(doc, indent=2, ensure_ascii=False)
         print(doc_str)
-        docs_content_txt.insert(tk.END, doc_str + "\n------------------------------------\n")
+        delimeter = "\n" + "-" * docs_content_txt['width'] + "\n"
+        docs_content_txt.insert(tk.END, doc_str + delimeter)
 
 
 def save_document():
