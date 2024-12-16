@@ -4,6 +4,24 @@ import tkinter as tk
 import json
 from bson import json_util
 
+
+def show_search_results():
+    key = search_key_input.get()
+    value = search_value_input.get()
+    comparer = comparer_converter[search_comparer_input.get()]
+    
+    value = {comparer: value}
+    
+    target = make_nested_dict(key, value)    
+    projection = {"type": 1, "name": 1}
+    vals = []
+    for doc in collection.find(target, projection):
+        vals.append(f"Тип: {doc.get('type', 'неизвестный')}. Название: {doc.get('name', 'не определено')}")
+    results_combo.configure(values=vals)
+    if vals:
+        results_combo.current(0)
+
+
 def get_all_documents_projected():
     collection = db[cl_name]
     projection = {"type" : 1, "name" : 1}
@@ -22,10 +40,8 @@ def update_docs_combo():
 
 def show_documents():
     collection = db[cl_name]
-    documents = list(collection.find())
     for doc in collection.find():
         doc_str = json_util.dumps(doc, indent=2, ensure_ascii=False)
-        print(doc_str)
         delimeter = "\n" + "-" * docs_content_txt['width'] + "\n"
         docs_content_txt.insert(tk.END, doc_str + delimeter)
 
@@ -94,8 +110,19 @@ collection = db[cl_name]
 with open('teams_and_matches.json', 'r', encoding='utf-8') as json_file:
     db[cl_name].insert_many(json.load(json_file))
 
-# Словарь для отображения документов
+# Словари для отображения документов
 documents_name = { }
+searched_docs_name = { }
+
+# Словарь для перевода знаков сравнения в ключи MongoDB
+comparer_converter = { 
+                      "<" : "$lt",
+                      "<=" : "$lte",
+                      "=" : "$eq",
+                      ">=" : "$gte",
+                      ">" : "$gt" 
+                     }
+ 
  
 # Создание основного окна и установка его заголовка
 root = tk.Tk()
@@ -110,32 +137,60 @@ document_name_input = tk.StringVar()
 key_input = tk.StringVar()
 value_input = tk.StringVar()
 string_to_display = tk.StringVar()
+search_key_input = tk.StringVar()
+search_comparer_input = tk.StringVar()
+search_value_input = tk.StringVar()
 
-tk.Label(root, text="Текущий документ:").pack(pady=10)
+agregate_comand_input = tk.StringVar()
 
-docs_combo = ttk.Combobox(root, width=50, textvariable=curr_doc, state="readonly")
+padx = 10
+
+tk.Label(root, text="Текущий документ:").place(x=padx, y=10)
+
+docs_combo = ttk.Combobox(root, width=40, textvariable=curr_doc, state="readonly")
 update_docs_combo()
 docs_combo.current(0)
-docs_combo.pack()
+docs_combo.place(x=padx, y=30)
+
+tk.Label(root, text="Тип документа").place(x=padx, y=60)
 
 options = ("Матч", "Команда")
-ttk.Combobox(root, textvariable=document_name_input, values=options, state="readonly").pack(pady=10)
-tk.Button(root, text="Создать ещё документ", command=create_document).pack(pady=10)
+ttk.Combobox(root, textvariable=document_name_input, values=options, state="readonly").place(x=padx, y=80)
+tk.Button(root, text="Создать ещё документ", command=create_document).place(x=padx, y=110)
 
-tk.Label(root, text="Ключ или вложенные ключи (через точку):").pack()
-tk.Entry(root, textvariable=key_input).pack()
+col_width = 340
+tk.Label(root, text="Ключ или вложенные ключи (через точку):").place(x=padx + col_width, y=10)
+tk.Entry(root, textvariable=key_input).place(x=padx + col_width, y=30)
 
-tk.Label(root, text="Значение:").pack()
-tk.Entry(root, textvariable=value_input).pack()
+tk.Label(root, text="Значение:").place(x=padx + col_width, y=60)
+tk.Entry(root, textvariable=value_input).place(x=padx + col_width, y=80)
 
-tk.Button(root, text="Добавить ключ-значение в текущий документ", command=insert_into_document_wrapper).pack(pady=10)
+tk.Button(root, text="Добавить ключ-значение в текущий документ", command=insert_into_document_wrapper).place(x=padx + col_width, y=110)
 
-tk.Button(root, text="Сохранить документ", command=save_document).pack(pady=10)
+tk.Button(root, text="Сохранить документ", command=save_document).place(x=padx + col_width, y=150)
 
-tk.Button(root, text="Показать документы", command=show_documents).pack(pady=10)
+padx = padx + col_width
+col_width = 350
+tk.Button(root, text="Показать документы", command=show_documents).place(x=padx+col_width, y=10)
 
-docs_content_txt = tk.Text(root)
-docs_content_txt.pack()
+docs_content_txt = tk.Text(root, width=50)
+docs_content_txt.place(x=padx+col_width, y=50)
 
+tk.Label(root, text="Ключ, по которому ведётся поиск:").place(x=1150, y=10)
+tk.Entry(root, textvariable=search_key_input).place(x=1150, y=30)
 
+vals = ['>', '>=', '=', '<=', '<']
+search_combo = ttk.Combobox(root, values=vals, textvariable=search_comparer_input, width=3)
+search_combo.current(0)
+search_combo.place(x=1150, y=60)
+
+tk.Label(root, text="Значение ключа, по которому ведётся поиск:").place(x=1150, y=90)
+tk.Entry(root, textvariable=search_value_input).place(x=1150, y=110)
+tk.Button(root, text="Показать результаты", command=show_search_results).place(x=1150, y=140)
+
+results_combo = ttk.Combobox(root, state="readonly")
+results_combo.place(x=1150, y=170)
+
+tk.Label(root, text="Команда для агрегации результатов:")
+tk.Entry(root, )
 root.mainloop()
