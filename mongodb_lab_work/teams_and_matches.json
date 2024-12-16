@@ -80,7 +80,7 @@
             {"team_name":"Динамо Львы"} 
         ],
         "date_of_match": "11.10.2024",
-        "match_score": "1-0",
+        "match_score": [1, 0],
         "yellow-red-cards": [       
             {
                 "color": "yellow", 
@@ -121,7 +121,7 @@
             {"team_name":"Динамо Львы"},
             {"team_name":"Звездные Молнии"}
         ],
-        "match_score": "1-1",
+        "match_score": [1, 1],
         "yellow-red-cards": [
             {
                 "color": "yellow",
@@ -162,7 +162,7 @@
             {"team_name":"Звездные Молнии"},
             {"team_name":"Грачи улицы"}
         ],
-        "match_score": "2-0",
+        "match_score": [2, 0],
         "yellow-red-cards": [
             {
                 "color": "yellow",

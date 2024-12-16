@@ -5,6 +5,87 @@ import json
 from bson import json_util
 
 
+def show_commands_with_cards():
+    
+    pipeline = [
+        {
+            '$unwind': '$teams'
+        },
+        {
+            '$unwind': '$yellow-red-cards'
+        },
+        {
+            '$group': {
+                '_id': '$teams.team_name', 
+                'total_yellow_red_cards': { '$sum': 1 }
+            }
+        },
+        {
+            '$sort': { 'total_yellow_red_cards': -1 }
+        },
+        {
+            '$limit': 1
+        },
+        {
+            '$project': {
+                'team_name': '$_id',
+                'total_yellow_red_cards': 1,
+                '_id': 0
+            }
+        }
+    ]
+
+    results = collection.aggregate(pipeline)
+    vals = []
+    for item in results:
+        vals.append(f"{item['team_name']}, кол-во карточек: {item['total_yellow_red_cards']}")
+    if vals:
+        aggr_results.configure(values=vals)
+        aggr_results.current(0)
+
+
+def show_bombards():
+    pipeline = [
+        { '$unwind': '$goals' },
+        {
+            '$group': {
+                '_id': '$goals.player_name',  
+                'total_goals': { '$sum': 1 }   
+            }
+        },
+        { 
+         '$sort': { 
+            'total_goals': -1 
+            } 
+        },
+        { '$limit': 1 },
+        {
+        '$project': {
+            'player_name': '$_id',
+            'total_goals': 1,
+            '_id': 0
+            }
+        }
+    ]
+    
+    results = collection.aggregate(pipeline)
+    vals = []
+    for item in results:
+        vals.append(f"{item['player_name']}, кол-во голов: {item['total_goals']}")
+    if vals:
+        aggr_results.configure(values=vals)
+        aggr_results.current(0)
+
+    
+    
+def aggr_wrapper():
+    comand = agregate_comand_input.get()
+    if comand == "Список бомбардиров":
+        show_bombards()
+    elif comand == "Команда c наибольшим количеством карточек":
+        show_commands_with_cards()           
+    
+    
 def show_search_results():
     key = search_key_input.get()
     value = search_value_input.get()
@@ -191,6 +272,14 @@ tk.Button(root, text="Показать результаты", command=show_searc
 results_combo = ttk.Combobox(root, state="readonly")
 results_combo.place(x=1150, y=170)
 
-tk.Label(root, text="Команда для агрегации результатов:")
-tk.Entry(root, )
+tk.Label(root, text="Доступные команды для агрегации результатов:").place(x=10, y=450)
+vals = ["Лучший бомбардир", "Команда c наибольшим количеством карточек"]
+aggregate_combo = ttk.Combobox(root, values=vals, width=45, textvariable=agregate_comand_input, state="readonly")
+aggregate_combo.place(x=10, y=470)
+
+tk.Button(root, text="Применить", command=aggr_wrapper).place(x=10, y=500)
+
+aggr_results = ttk.Combobox(root, width=55, state="readonly")
+aggr_results.place(x=10, y=530)
+
 root.mainloop()
