@@ -5,18 +5,49 @@ import json
 from bson import json_util
 
 
+def get_items_name_and_cost_for_customer(customer_name, collection, result_area):
+    pipeline = [
+        {
+            "$unwind": "$customers"
+        },
+        {
+            "$match": {
+                "customers.name": customer_name
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,
+                "product.name": 1,
+                "product.price": 1
+            }
+        }
+    ]
+    
+    cursor = collection.aggregate(pipeline)
+    result_area.delete("1.0", tk.END)
+    
+    pad = "  "
+    result_area.insert(tk.END, f"{customer_name}\n")
+    for item in cursor:
+        for ch in item['product']:
+            result_area.insert(tk.END, f"{pad}{ch}: {item['product'][ch]}\n")
+        result_area.insert(tk.END, '\n')
+    
+
 def get_item_features_of_category(category, collection, result_area):
     filter = {"category": category}
     projection = { "_id": 0, "product.features": 1, "product.name": 1}
     
     cursor = collection.find(filter, projection)
     
+    pad = "  "
     for item in cursor:
         result_area.insert(tk.END, f"{item['product']['name']}\n")
         features = item['product']['features']
-        pad = "  "
         for feature in features.keys():
             result_area.insert(tk.END, f"{pad}{feature}: {features[feature]}\n")
+
 
 def get_item_names_of_category(category, collection, result_area):
     filter = { "category": category }
@@ -36,7 +67,7 @@ def exec_query_one_param():
     elif comand == "Получить список характеристик товаров заданной категории":
         get_item_features_of_category(param, collection, result_area)
     elif comand == "Получить список названий и стоимости товаров, купленных заданным покупателем":
-        raise NotImplementedError
+        get_items_name_and_cost_for_customer(param, collection, result_area)
     elif comand == "Получить список названий, производителей и цен на товары, имеющие заданный цвет":
         raise NotImplementedError
     elif comand == "Получить список имен покупателей заданного товара":
