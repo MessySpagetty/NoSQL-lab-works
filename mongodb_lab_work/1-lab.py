@@ -126,10 +126,6 @@ def show_documents():
         delimeter = "\n" + "-" * docs_content_txt['width'] + "\n"
         docs_content_txt.insert(tk.END, doc_str + delimeter)
 
-
-def save_document():
-    raise NotImplementedError
-
     
 def insert_into_document_wrapper():
     doc_name = curr_doc.get()
@@ -202,7 +198,7 @@ comparer_converter = {
                       "=" : "$eq",
                       ">=" : "$gte",
                       ">" : "$gt" 
-                     }
+                    }
  
  
 # Создание основного окна и установка его заголовка

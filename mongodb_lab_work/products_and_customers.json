@@ -1,0 +1,359 @@
+[
+    {
+      "category": "Электроника",
+      "product": {
+        "name": "Смартфон XYZ",
+        "manufacturer": "XYZ Corp",
+        "price": 5999,
+        "features": {
+          "screen": "6.5 дюймов",
+          "camera": "48 МП",
+          "battery": "4500 мАч"
+        }
+      },
+      "customers": [
+        {
+          "name": "Илья",
+          "purchase_date": "2023-10-15",
+          "review": "Отличный телефон! Супер камера.",
+          "delivery_service": "Почта России"
+        },
+        {
+          "name": "Анна",
+          "purchase_date": "2023-11-02",
+          "review": "Удобный и быстрый.",
+          "delivery_service": "СДЭК"
+        }
+      ]
+    },
+    {
+      "category": "Электроника",
+      "product": {
+        "name": "Наушники ABC",
+        "manufacturer": "ABC Audio",
+        "price": 2999,
+        "features": {
+          "type": "Беспроводные",
+          "battery_life": "20 часов",
+          "water_resistance": "IPX5"
+        }
+      },
+      "customers": [
+        {
+          "name": "Сергей",
+          "purchase_date": "2023-09-20",
+          "review": "Приятный звук и хороший бас.",
+          "delivery_service": "Доставка 24"
+        },
+        {
+          "name": "Мария",
+          "purchase_date": "2023-11-10",
+          "review": "Лучшие наушники, которые я когда-либо пробовала!",
+          "delivery_service": "PickPoint"
+        }
+      ]
+    },
+    {
+        "category": "Электроника",
+        "product": {
+            "name": "Умные часы SmartWatch Pro",
+            "manufacturer": "ProTech",
+            "price": 7999,
+            "features": {
+                "screen": "1.4 дюйма",
+                "battery_life": "7 дней",
+                "water_resistance": "Класс защиты IP68",
+                "compatibility": "iOS и Android"
+            }
+        },
+        "customers": [
+            {
+                "name": "Дмитрий",
+                "purchase_date": "2023-11-12",
+                "review": "Прекрасные часы, много полезных функций!",
+                "delivery_service": "СДЭК"
+            },
+            {
+                "name": "Елена",
+                "purchase_date": "2023-11-20",
+                "review": "Очень удобные и стильные.",
+                "delivery_service": "Почта России"
+            }
+        ]
+    },
+    {
+        "category": "Электроника",
+        "product": {
+            "name": "Портативная колонка SoundMax",
+            "manufacturer": "SoundMax",
+            "price": 3499,
+            "features": {
+                "battery_life": "12 часов",
+                "bluetooth_range": "30 метров",
+                "water_resistance": "IPX7",
+                "weight": "500 г"
+            }
+        },
+        "customers": [
+            {
+                "name": "Светлана",
+                "purchase_date": "2023-11-10",
+                "review": "Отличная колонка для вечеринок!",
+                "delivery_service": "Доставка 24"
+            },
+
+            {
+                "name": "Юрий",
+                "purchase_date": "2023-11-18",
+                "review": "Звук потрясающий, рекомендую!",
+                "delivery_service": "PickPoint"
+            }
+        ]
+    },
+    {
+        "category": "Электроника",
+        "product": {
+            "name": "Лаптоп SuperBook 15",
+            "manufacturer": "SuperTech",
+            "price": 59999,
+            "features": {
+                "screen": "15.6 дюймов Full HD",
+                "processor": "Intel Core i7",
+                "ram": "16 ГБ",
+                "storage": "512 ГБ SSD",
+                "battery_life": "10 часов"
+            }
+        },
+
+        "customers": [
+            {
+                "name": "Максим",
+                "purchase_date": "2023-11-22",
+                "review": "Шикарный ноутбук для работы и игр!",
+                "delivery_service": "Доставка 24"
+            },
+
+            {
+                "name": "Анна",
+                "purchase_date": "2023-11-30",
+                "review": "Долгое время работы от батареи – большой плюс.",
+                "delivery_service": "СДЭК"
+            }
+        ]
+    },
+
+
+    {
+      "category": "Одежда",
+      "product": {
+        "name": "Футболка CoolWear",
+        "manufacturer": "CoolWear",
+        "price": 1299,
+        "features": {
+          "material": "Хлопок",
+          "sizes": ["S", "M", "L", "XL"],
+          "colors": ["Черный", "Белый"]
+        }
+      },
+      "customers": [
+        {
+          "name": "Алексей",
+          "purchase_date": "2023-10-25",
+          "review": "Отличное качество за свою цену.",
+          "delivery_service": "Почта России"
+        }
+      ]
+    },
+    {
+      "category": "Одежда",
+      "product": {
+        "name": "Джинсы DenimPlus",
+        "manufacturer": "DenimPlus",
+        "price": 2499,
+        "features": {
+          "material": "Деним",
+          "sizes": [30, 32, 34],
+          "style": "Slim fit"
+        }
+      },
+      "customers": [
+        {
+          "name": "Екатерина",
+          "purchase_date": "2023-11-15",
+          "review": "Сидят идеально!",
+          "delivery_service": "СДЭК"
+        }
+      ]
+    },
+    {
+        "category": "Одежда",
+        "product": {
+            "name": "Куртка WinterGuard",
+            "manufacturer": "SafeWear",
+            "price": 4999,
+            "features": {
+                "material": "Полиген",
+                "sizes": ["M", "L", "XL"],
+                "colors": ["Темно-синий", "Черный"],
+                "water_resistance": "Да"
+            }
+        },
+        "customers": [
+            {
+                "name": "Игорь",
+                "purchase_date": "2023-11-05",
+                "review": "Теплая и удобная куртка, отлично подходит для зимы.",
+                "delivery_service": "Доставка 24"
+            },
+            {
+                "name": "Ольга",
+                "purchase_date": "2023-11-10",
+                "review": "Куртка на высшем уровне, очень нравится!",
+                "delivery_service": "Почта России"
+            }
+        ]
+    },
+    {
+        "category": "Одежда",
+        "product": {
+            "name": "Платье SummerBreeze",
+            "manufacturer": "Fashionista",
+            "price": 3499,
+            "features": {
+                "material": "Шелк",
+                "sizes": ["S", "M", "L"],
+                "colors": ["Красный", "Синий", "Чёрный"],
+                "style": "А-силуэт"
+            }
+        },
+        "customers": [
+            {
+                "name": "Марина",
+                "purchase_date": "2023-11-18",
+                "review": "Прекрасное платье, очень легкое и удобное.",
+                "delivery_service": "СДЭК"
+            },
+            {
+                "name": "Наталья",
+                "purchase_date": "2023-12-01",
+                "review": "Очень красивое и стильное, всем рекомендую!",
+                "delivery_service": "PickPoint"
+            }
+        ]
+    },
+    {
+        "category": "Одежда",
+        "product": {
+            "name": "Спортивные штаны FitActive",
+            "manufacturer": "FitBrand",
+            "price": 1999,
+            "features": {
+                "material": "Полиэстер",
+                "sizes": ["S", "M", "L", "XL"],
+                "colors": ["Серый", "Черный"],
+                "style": "Спортивный"
+            }
+        },
+        "customers": [
+            {
+                "name": "Андрей",
+                "purchase_date": "2023-11-12",
+                "review": "Удобные и стильные штаны для тренировок.",
+                "delivery_service": "Доставка 24"
+            },
+            {
+                "name": "Елена",
+                "purchase_date": "2023-11-20",
+                "review": "Отличное качество и посадка.",
+                "delivery_service": "СДЭК"
+            }
+        ]
+    },
+      
+      
+    {
+      "category": "Домашние аксессуары",
+      "product": {
+        "name": "Коврик для ванной AquaSoft",
+        "manufacturer": "AquaSoft",
+        "price": 899,
+        "features": {
+          "material": "Микрофибра",
+          "colors": ["Голубой", "Розовый"],
+          "size": "50x80 см"
+        }
+      },
+      "customers": [
+        {
+          "name": "Ольга",
+          "purchase_date": "2023-11-01",
+          "review": "Очень мягкий и удобный.",
+          "delivery_service": "Доставка 24"
+        }
+      ]
+    },
+    {
+      "category": "Домашние аксессуары",
+      "product": {
+        "name": "Подушки ComfortRest",
+        "manufacturer": "ComfortRest",
+        "price": 1499,
+        "features": {
+          "filling": "Холлофайбер",
+          "size": "50x70 см",
+          "cover": "Хлопок"
+        }
+      },
+      "customers": [
+        {
+          "name": "Павел",
+          "purchase_date": "2023-12-01",
+          "review": "Сплю как убитый!",
+          "delivery_service": "PickPoint"
+        }
+      ]
+    },
+    {
+      "category": "Книги",
+      "product": {
+        "name": "\"Искусство войны\"",
+        "author": "Сунь Цзы",
+        "price": 399,
+        "features": {
+          "genre": "Философия",
+          "pages": 120,
+          "publisher": "Издательство Знание"
+        }
+      },
+      "customers": [
+        {
+          "name": "Дмитрий",
+          "purchase_date": "2023-11-05",
+          "review": "Мудрая книга для жизни.",
+          "delivery_service": "Почта России"
+        }
+      ]
+    },
+    {
+      "category": "Книги",
+      "product": {
+        "name": "\"Мастера и Маргарита\"",
+        "author": "Михаил Булгаков",
+        "price": 499,
+        "features": {
+          "genre": "Роман",
+          "pages": 480,
+          "publisher": "Эксмо"
+        }
+      },
+      "customers": [
+        {
+          "name": "Наталья",
+          "purchase_date": "2023-10-10",
+          "review": "Не могу оторваться!",
+          "delivery_service": "СДЭК"
+        }
+      ]
+    }
+  ]
+  
