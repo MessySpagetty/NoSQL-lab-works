@@ -6,14 +6,23 @@ from bson import json_util
 
 
 def get_item_features_of_category(category, collection, result_area):
-    raise NotImplementedError
-
+    filter = {"category": category}
+    projection = { "_id": 0, "product.features": 1, "product.name": 1}
+    
+    cursor = collection.find(filter, projection)
+    
+    for item in cursor:
+        result_area.insert(tk.END, f"{item['product']['name']}\n")
+        features = item['product']['features']
+        pad = "  "
+        for feature in features.keys():
+            result_area.insert(tk.END, f"{pad}{feature}: {features[feature]}\n")
 
 def get_item_names_of_category(category, collection, result_area):
-    query = { "category": category }
+    filter = { "category": category }
     projection = {"_id": 0, "product.name": 1}
     
-    cursor = collection.find(query, projection)
+    cursor = collection.find(filter, projection)
     result_area.delete("1.0", tk.END)
     for item in cursor:
         result_area.insert(tk.END, f"{item['product']['name']}\n")
@@ -126,7 +135,7 @@ one_param_combo.grid(row=0, column=1)
 
 tk.Label(root, textvariable=one_param_name).grid(row=1, column=1)
 tk.Entry(root, textvariable=one_param_value).grid(row=3, column=1)
-tk.Button(root, text="Выполнить", command=exec_query_one_param).grid(row=4, column=1)
+tk.Button(root, text="Выполнить запрос", command=exec_query_one_param).grid(row=4, column=1)
 
 vals_no_params = ["Получить количество товаров в каждой категории", "Получить общую сумму проданных товаров"]
 no_params_combo = ttk.Combobox(root, values=vals_no_params, textvariable=command_no_params, state="readonly", width=50)
