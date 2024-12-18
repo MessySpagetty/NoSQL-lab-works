@@ -5,6 +5,82 @@ import json
 from bson import json_util
 
 
+def get_general_cost_of_purchased_items(collection, result_area):
+    raise NotImplementedError
+
+def get_items_amount_in_each_category(collection, result_area):
+    pipeline = [
+        {
+            '$group': {
+                '_id': '$category',
+                'amount': {'$sum': 1}
+            } 
+        },
+        {
+            '$project': {
+                'category': '$_id',
+                '_id': 0,
+                'amount': 1
+            }   
+        }
+    ]
+    
+    cursor = collection.aggregate(pipeline)
+    
+    result_area.delete("1.0", tk.END)
+    for item in cursor:
+        result_area.insert(tk.END, f"Категория: {item['category']}. Количество: {item['amount']}.\n")
+        
+    
+    
+
+def exec_query_no_params():
+    comand = command_no_params.get()
+    if comand == "Получить количество товаров в каждой категории":
+        get_items_amount_in_each_category(collection, result_area)
+    elif comand == "Получить общую сумму проданных товаров":
+        get_general_cost_of_purchased_items(collection, result_area)
+
+
+def get_customers_of_items(item_name, collection, result_area):
+    pipeline = [
+        {
+            "$match": {
+                "product.name": item_name
+            }
+        },
+        {
+            "$unwind": "$customers"
+        },
+        {
+            "$project": {
+                "_id": 0,
+                "customers.name": 1
+            }
+        }
+    ]
+    cursor = collection.aggregate(pipeline)
+    
+    result_area.delete("1.0", tk.END)
+    for item in cursor:
+        customer = item['customers']
+        result_area.insert(tk.END, f"{customer['name']}\n")
+
+
+def get_names_manufacturers_prices_for_item_with_color(color, collection, result_area):
+    filter = {"product.color": color}
+    projection = { "_id": 0, "product.name": 1, "product.manufacturer": 1, "product.price": 1}    
+
+    cursor = collection.find(filter, projection)
+    result_area.delete("1.0", tk.END)
+    
+    for item in cursor:
+        item_pr = item['product'] 
+        for ch in item_pr.keys():
+            result_area.insert(tk.END, f"{ch}: {item_pr[ch]}\n")
+        result_area.insert(tk.END, "-" * result_area["width"] + "\n")
+
+
 def get_items_name_and_cost_for_customer(customer_name, collection, result_area):
     pipeline = [
         {
@@ -40,6 +116,7 @@ def get_item_features_of_category(category, collection, result_area):
     projection = { "_id": 0, "product.features": 1, "product.name": 1}
     
     cursor = collection.find(filter, projection)
+    result_area.delete("1.0", tk.END)
     
     pad = "  "
     for item in cursor:
@@ -69,9 +146,9 @@ def exec_query_one_param():
     elif comand == "Получить список названий и стоимости товаров, купленных заданным покупателем":
         get_items_name_and_cost_for_customer(param, collection, result_area)
     elif comand == "Получить список названий, производителей и цен на товары, имеющие заданный цвет":
-        raise NotImplementedError
+        get_names_manufacturers_prices_for_item_with_color(param, collection, result_area)
     elif comand == "Получить список имен покупателей заданного товара":
-        raise NotImplementedError
+        get_customers_of_items(param, collection, result_area)
     
 
 def exec_query_two_params():
@@ -165,13 +242,16 @@ one_param_combo.current(0)
 one_param_combo.grid(row=0, column=1)
 
 tk.Label(root, textvariable=one_param_name).grid(row=1, column=1)
-tk.Entry(root, textvariable=one_param_value).grid(row=3, column=1)
+tk.Entry(root, textvariable=one_param_value).grid(row=2, column=1)
+
 tk.Button(root, text="Выполнить запрос", command=exec_query_one_param).grid(row=4, column=1)
 
 vals_no_params = ["Получить количество товаров в каждой категории", "Получить общую сумму проданных товаров"]
 no_params_combo = ttk.Combobox(root, values=vals_no_params, textvariable=command_no_params, state="readonly", width=50)
 no_params_combo.current(0)
 no_params_combo.grid(row=0, column=3)
+
+tk.Button(root, text="Выполнить запрос", command=exec_query_no_params).grid(row=2, column=3)
 
 tk.Label(root, text="Результаты выполнения запроса:").grid(row=5, column=1)
 result_area = tk.Text(root, width=50)

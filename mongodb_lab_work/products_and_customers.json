@@ -5,6 +5,7 @@
         "name": "Смартфон XYZ",
         "manufacturer": "XYZ Corp",
         "price": 5999,
+        "color": "Чёрный",
         "features": {
           "screen": "6.5 дюймов",
           "camera": "48 МП",
@@ -32,6 +33,7 @@
         "name": "Наушники ABC",
         "manufacturer": "ABC Audio",
         "price": 2999,
+        "color": "Белый",
         "features": {
           "type": "Беспроводные",
           "battery_life": "20 часов",
@@ -59,6 +61,7 @@
             "name": "Умные часы SmartWatch Pro",
             "manufacturer": "ProTech",
             "price": 7999,
+            "color": "Розовый",
             "features": {
                 "screen": "1.4 дюйма",
                 "battery_life": "7 дней",
@@ -87,6 +90,7 @@
             "name": "Портативная колонка SoundMax",
             "manufacturer": "SoundMax",
             "price": 3499,
+            "color": "Чёрный",
             "features": {
                 "battery_life": "12 часов",
                 "bluetooth_range": "30 метров",
@@ -149,6 +153,7 @@
         "name": "Футболка CoolWear",
         "manufacturer": "CoolWear",
         "price": 1299,
+        "color": "Серый",
         "features": {
           "material": "Хлопок",
           "sizes": ["S", "M", "L", "XL"],
@@ -170,6 +175,7 @@
         "name": "Джинсы DenimPlus",
         "manufacturer": "DenimPlus",
         "price": 2499,
+        "color": "Розовый",
         "features": {
           "material": "Деним",
           "sizes": [30, 32, 34],
@@ -186,32 +192,33 @@
       ]
     },
     {
-        "category": "Одежда",
-        "product": {
-            "name": "Куртка WinterGuard",
-            "manufacturer": "SafeWear",
-            "price": 4999,
-            "features": {
-                "material": "Полиген",
-                "sizes": ["M", "L", "XL"],
-                "colors": ["Темно-синий", "Черный"],
-                "water_resistance": "Да"
-            }
-        },
-        "customers": [
-            {
-                "name": "Игорь",
-                "purchase_date": "2023-11-05",
-                "review": "Теплая и удобная куртка, отлично подходит для зимы.",
-                "delivery_service": "Доставка 24"
-            },
-            {
-                "name": "Ольга",
-                "purchase_date": "2023-11-10",
-                "review": "Куртка на высшем уровне, очень нравится!",
-                "delivery_service": "Почта России"
-            }
-        ]
+      "category": "Одежда",
+      "product": {
+          "name": "Куртка WinterGuard",
+          "manufacturer": "SafeWear",
+          "price": 4999,
+          "color": "Зелёный",
+          "features": {
+              "material": "Полиген",
+              "sizes": ["M", "L", "XL"],
+              "colors": ["Темно-синий", "Черный"],
+              "water_resistance": "Да"
+          }
+      },
+      "customers": [
+          {
+              "name": "Игорь",
+              "purchase_date": "2023-11-05",
+              "review": "Теплая и удобная куртка, отлично подходит для зимы.",
+              "delivery_service": "Доставка 24"
+          },
+          {
+              "name": "Ольга",
+              "purchase_date": "2023-11-10",
+              "review": "Куртка на высшем уровне, очень нравится!",
+              "delivery_service": "Почта России"
+          }
+      ]
     },
     {
         "category": "Одежда",
@@ -219,6 +226,7 @@
             "name": "Платье SummerBreeze",
             "manufacturer": "Fashionista",
             "price": 3499,
+            "color": "Синий",
             "features": {
                 "material": "Шелк",
                 "sizes": ["S", "M", "L"],
@@ -247,6 +255,7 @@
             "name": "Спортивные штаны FitActive",
             "manufacturer": "FitBrand",
             "price": 1999,
+            "color": "Красный",
             "features": {
                 "material": "Полиэстер",
                 "sizes": ["S", "M", "L", "XL"],
@@ -277,6 +286,7 @@
         "name": "Коврик для ванной AquaSoft",
         "manufacturer": "AquaSoft",
         "price": 899,
+        "color": "Голубой",
         "features": {
           "material": "Микрофибра",
           "colors": ["Голубой", "Розовый"],
@@ -298,6 +308,7 @@
         "name": "Подушки ComfortRest",
         "manufacturer": "ComfortRest",
         "price": 1499,
+        "color": "Зелёный",
         "features": {
           "filling": "Холлофайбер",
           "size": "50x70 см",
@@ -317,9 +328,11 @@
       "category": "Книги",
       "product": {
         "name": "\"Искусство войны\"",
-        "author": "Сунь Цзы",
         "price": 399,
+        "manufacturer": "Litera", 
+        "color": "Чёрный",
         "features": {
+          "author": "Сунь Цзы",
           "genre": "Философия",
           "pages": 120,
           "publisher": "Издательство Знание"
@@ -338,9 +351,11 @@
       "category": "Книги",
       "product": {
         "name": "\"Мастера и Маргарита\"",
-        "author": "Михаил Булгаков",
+        "manufacturer": "Eto Znak", 
         "price": 499,
+        "color": "Красный",
         "features": {
+          "author": "Михаил Булгаков",
           "genre": "Роман",
           "pages": 480,
           "publisher": "Эксмо"
