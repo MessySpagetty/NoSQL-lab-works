@@ -2,11 +2,36 @@ from pymongo.mongo_client import MongoClient
 import tkinter.ttk as ttk
 import tkinter as tk
 import json
-from bson import json_util
 
 
 def get_general_cost_of_purchased_items(collection, result_area):
-    raise NotImplementedError
+    pipeline = [
+        {
+            '$unwind': '$customers'
+        },
+        {
+            '$group': {
+                '_id': 0,
+                'total_cost': {
+                    '$sum': '$product.price'
+                }
+            }
+        },
+        {
+            '$project': {
+                '_id': 0, 
+                'total_cost': 1
+            }
+        } 
+    ]
+    cursor = collection.aggregate(pipeline)
+    
+    result_area.delete("1.0", tk.END)
+    for item in cursor:
+        result_area.insert(tk.END, f"Суммарная стоимость: {item['total_cost']}.\n")
+    
+    
+    
 
 def get_items_amount_in_each_category(collection, result_area):
     pipeline = [
@@ -218,7 +243,7 @@ command_no_params = tk.StringVar()
 
 
 vals_two_params = ["Получить список имен покупателей заданного товара, с доставкой фирмы с заданным названием"]
-two_param_combo = ttk.Combobox(root, values=vals_two_params, textvariable=comand_two_params, state="readonly", width=92)
+two_param_combo = ttk.Combobox(root, values=vals_two_params, textvariable=comand_two_params, state="readonly", width=92, height=2)
 two_param_combo.current(0)
 two_param_combo.grid(row=0, column=0)
 
