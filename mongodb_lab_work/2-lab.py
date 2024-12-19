@@ -177,18 +177,22 @@ def exec_query_one_param():
     
 
 def exec_query_two_params():
-    cmp_name = company_name.get()
+    dlv_service_name = company_name.get()
     pr_name = item_name.get()
     
     pipeline = [
         {
            "$match": {
-                "product.name": pr_name,
-                "product.manufacturer": cmp_name   
+                "product.name": pr_name
             }
         },
         {
             "$unwind": "$customers"
+        },
+        {
+            "$match":{
+                "customers.delivery_service": dlv_service_name
+            }  
         },
         { 
             "$project": 
