@@ -324,6 +324,72 @@
       ]
     },
     {
+      "category": "Домашние аксессуары",
+      "product": {
+        "name": "Подушка для отдыха ComfortRest",
+        "manufacturer": "ComfortRest",
+        "price": 1199,
+        "color": "Серый",
+        "features": {
+          "material": "Пух/перо",
+          "colors": ["Серый", "Бежевый", "Синий"],
+          "size": "40x40 см"
+        }
+      },
+      "customers": [
+        {
+          "name": "Мария",
+          "purchase_date": "2023-11-10",
+          "review": "Подушка очень мягкая и удобная. Отлично подходит для сна.",
+          "delivery_service": "Доставка 24"
+        },
+        {
+          "name": "Владимир",
+          "purchase_date": "2023-11-12",
+          "review": "Качество отличное, но немного великовата для кресла.",
+          "delivery_service": "Курьерская служба"
+        }
+      ]
+    },
+    {
+      "category": "Домашние аксессуары",
+      "product": {
+        "name": "Свеча с ароматом ванили Aromatica",
+        "manufacturer": "Aromatica",
+        "price": 499,
+        "color": "Красный",
+        "features": {
+          "material": "Воск",
+          "scents": ["Ваниль", "Лаванда", "Цитрус"],
+          "size": "200 грамм"
+        }
+      },
+      "customers": [
+        {
+          "name": "Ирина",
+          "purchase_date": "2023-11-18",
+          "review": "Аромат просто шикарный, создает уютную атмосферу!",
+          "delivery_service": "Почта России"
+        }
+      ]
+    },
+    {
+      "category": "Домашние аксессуары",
+      "product": {
+        "name": "Коврик для кухни EcoStep",
+        "manufacturer": "EcoStep",
+        "price": 799,
+        "color": "Оранжевый",
+        "features": {
+          "material": "Текстиль",
+          "colors": ["Оранжевый", "Зеленый", "Голубой"],
+          "size": "60x90 см"
+        }
+      },
+      "customers": []
+    },
+
+    {
       "category": "Книги",
       "product": {
         "name": "\"Искусство войны\"",
@@ -368,6 +434,74 @@
           "delivery_service": "СДЭК"
         }
       ]
-    }
+    },
+    {
+      "category": "Книги",
+      "product": {
+        "name": "\"1984\"",
+        "manufacturer": "Alpine Publishing", 
+        "price": 399,
+        "color": "Синий",
+        "features": {
+          "author": "Джордж Оруэлл",
+          "genre": "Антиутопия",
+          "pages": 328,
+          "publisher": "Эксмо"
+        }
+      },
+      "customers": [
+        {
+          "name": "Анна",
+          "purchase_date": "2023-11-05",
+          "review": "Шокирующая и актуальная книга. Обязательно к прочтению!",
+          "delivery_service": "Доставка 24"
+        }
+      ]
+    },
+    {
+      "category": "Книги",
+      "product": {
+        "name": "\"Убить пересмешника\"",
+        "manufacturer": "Classic Books", 
+        "price": 459,
+        "color": "Зеленый",
+        "features": {
+          "author": "Харпер Ли",
+          "genre": "Роман",
+          "pages": 336,
+          "publisher": "Эксмо"
+        }
+      },
+      "customers": [
+        {
+          "name": "Игорь",
+          "purchase_date": "2023-10-20",
+          "review": "Глубокий и трогательный сюжет. Впечатляет!",
+          "delivery_service": "Курьерская служба"
+        },
+        {
+          "name": "Светлана",
+          "purchase_date": "2023-11-02",
+          "review": "Неожиданные повороты сюжета, читается на одном дыхании.",
+          "delivery_service": "Почта России"
+        }
+      ]
+    },
+    {
+      "category": "Книги",
+      "product": {
+        "name": "\"Война и мир\"",
+        "manufacturer": "Great Literature Inc.", 
+        "price": 799,
+        "color": "Бежевый",
+        "features": {
+          "author": "Лев Толстой",
+          "genre": "Исторический роман",
+          "pages": 1224,
+          "publisher": "АСТ"
+        }
+      },
+      "customers": []
+    }    
   ]
   
