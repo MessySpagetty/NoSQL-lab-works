@@ -35,8 +35,8 @@ def create_stops(driver):
 def create_organizations(driver):
     organizations = [f'Организация {i}' for i in range(1, 21)]
     with driver.session() as session:
-        for idx, org in enumerate(organizations, start=1):
-            session.run(f"CREATE (:Organization {{id: 'Org{idx}', name: '{org}'}})")
+        for i, org in enumerate(organizations, start=1):
+            session.run(f"CREATE (:Organization {{id: 'Org{i}', name: '{org}'}})")
 
 
 def create_relationships(driver):
@@ -82,20 +82,62 @@ def get_stops_for_route(driver, route_id):
     return stops
 
 
+def get_transfer_stops(driver):
+    with driver.session() as session:
+        result = session.run(
+            "MATCH (s:Stop)<-[:STOPS_AT]-(r:Route) "
+            "WITH s, COUNT(DISTINCT r) AS routeCount "
+            "WHERE routeCount > 1 "
+            "RETURN DISTINCT s.name AS stopName"
+        )
+        return [record["stopName"] for record in result]
+
+def get_single_route_stops(driver):
+    with driver.session() as session:
+        result = session.run(
+            "MATCH (s:Stop)<-[:STOPS_AT]-(r:Route) "
+            "WITH s, COUNT(DISTINCT r) AS routeCount "
+            "WHERE routeCount = 1 "
+            "RETURN DISTINCT s.name AS stopName"
+        )
+        return [record["stopName"] for record in result]
+
+
 def get_nearby_organizations(driver, stop_id):
     with driver.session() as session:
         result = session.run(
-            f"MATCH (s:Stop {{id: '{stop_id}'}})-[:NEAR]->(o:Organization) "
-            "RETURN o"
+            "MATCH (s:Stop {id: $stopId})-[:NEAR]->(o:Organization) "
+            "RETURN o.name as name",
+            stopId=stop_id
         )
-        return [record["o"]["name"] for record in result]
+        return [org["name"] for org in result]
 
+
+def print_transfer_stops(transfer_stops):
+    print("Названия остановок, на которых возможна пересадка:")
+    for st in transfer_stops:
+        print(st)
+
+
+def print_single_rout_stops(single_routed_stops):
+    print("Названия остановок, на которых останавливается только один маршрут:")
+    for st in single_routed_stops:
+        print(st)
+
+
+def print_nearby_organizations(stop_name, organization_names):
+    print(f"Ближайшие организации для {stop_name}: ")
+    for org_n in organization_names:
+        print(org_n)
+    print("")
+    
 
 def print_stops_for_routs(route, stops):
     print(f"Остановки для {route}:")
     for st in stops:
         print(f"{st['order']}: {st['name']}")
     print("")
+
 
 # Инициализация БД
 drop_all_data(driver)
@@ -105,6 +147,9 @@ create_organizations(driver)
 create_relationships(driver)
 
 print_stops_for_routs("Route101", get_stops_for_route(driver, "Route101"))
+print_nearby_organizations("Stop1", get_nearby_organizations(driver, "Stop1"))
+print_single_rout_stops(get_single_route_stops(driver))
+print_transfer_stops(get_transfer_stops(driver))
 
 # Закрываем соединение
 driver.close()
